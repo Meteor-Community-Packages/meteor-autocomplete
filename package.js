@@ -10,8 +10,8 @@ Package.on_use(function (api) {
     api.add_files([
         'inputs.html',
         'caretposition.js',
-        'sew.js',
-        'autocomplete.coffee'
+        'autocomplete.coffee',
+        'templates.coffee'
     ], 'client');
 
 });
