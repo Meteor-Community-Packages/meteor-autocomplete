@@ -12,14 +12,14 @@
 
 <template name="_autocompleteContainer">
     {{#if shown}}
-        <div class='-autocomplete-container' style='position: absolute;'>
-            <ul class='-autocomplete-list'>
+    <div class='-autocomplete-container' style='position: absolute;'>
+        <ul class='-autocomplete-list'>
             {{#each items}}
-                <li class="-autocomplete-item">
-                    {{pluck ../currentField}}
-                </li>
+            <li class="-autocomplete-item {{selected}}">
+                {{itemTemplate ..}}
+            </li>
             {{/each}}
-            </ul>
-        </div>
+        </ul>
+    </div>
     {{/if}}
 </template>

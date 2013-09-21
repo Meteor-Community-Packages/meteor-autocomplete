@@ -9,25 +9,23 @@ buildAttributeString = (obj) ->
     arr.push "\" "
   return arr.join ""
 
-Handlebars.registerHelper "inputAutocomplete", (triggers, options) ->
+Handlebars.registerHelper "inputAutocomplete", (settings, options) ->
   return new Handlebars.SafeString Template._inputAutocomplete
-    triggers: triggers
     attributes: buildAttributeString(options.hash)
-    ac: new AutoComplete(triggers)
+    ac: new AutoComplete(settings)
 
-Handlebars.registerHelper "textareaAutocomplete", (triggers, options) ->
+Handlebars.registerHelper "textareaAutocomplete", (settings, options) ->
   return new Handlebars.SafeString Template._textareaAutocomplete
-    triggers: triggers
     attributes: buildAttributeString(options.hash)
     text: options.fn(this)
-    ac: new AutoComplete(triggers)
+    ac: new AutoComplete(settings)
 
 # Events on template instances
 events =
-  "keydown": (e, tmplInst) -> tmplInst._ac.onKeyDown(e)
-  "keyup": (e, tmplInst) -> tmplInst._ac.onKeyUp(e)
-  "focus": (e, tmplInst) -> tmplInst._ac.onFocus(e)
-  "blur": (e, tmplInst) -> tmplInst._ac.onBlur(e)
+  "keydown": (e, tmplInst) -> tmplInst.data.ac.onKeyDown(e)
+  "keyup": (e, tmplInst) -> tmplInst.data.ac.onKeyUp(e)
+  "focus": (e, tmplInst) -> tmplInst.data.ac.onFocus(e)
+  "blur": (e, tmplInst) -> tmplInst.data.ac.onBlur(e)
 
 Template._inputAutocomplete.events = events
 Template._textareaAutocomplete.events = events
@@ -36,6 +34,7 @@ Template._textareaAutocomplete.events = events
 init = ->
   @data.ac.element = @firstNode
   @data.ac.$element = $(@firstNode)
+  @data.ac.tmplInst = this
 
 Template._inputAutocomplete.rendered = init
 Template._textareaAutocomplete.rendered = init
@@ -44,13 +43,19 @@ Template._textareaAutocomplete.rendered = init
   List rendering helpers
 ###
 Template._autocompleteContainer.rendered = ->
+  return if @rendered
+  # Pick the first item on first render, also need to set css
+
+Template._autocompleteContainer.events =
+  "click": (e, tmplInst) -> tmplInst.data.ac.onItemClick.call(this, e);
+  "mouseover": (e, tmplInst) -> tmplInst.data.ac.onItemHover.call(this, e);
 
 Template._autocompleteContainer.shown = -> @listShown()
 
 Template._autocompleteContainer.items = -> @filteredList()
 
-Template._autocompleteContainer.pluck = (field) -> this[field]
+Template._autocompleteContainer.selected = -> Session.equals("-autocomplete-id", @_id)
 
-Template._autocompleteContainer.events =
-  "click": (e, tmplInst) -> tmplInst.data.ac.onItemClick.call(this, e);
-  "mouseover": (e, tmplInst) -> tmplInst.data.ac.onItemHover.call(this, e);
+Template._autocompleteContainer.itemTemplate = (ac) ->
+  new Handlebars.SafeString( ac.currentTemplate()(this) )
+
