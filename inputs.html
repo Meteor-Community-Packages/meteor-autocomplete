@@ -1,23 +1,25 @@
 <template name="_inputAutocomplete">
     <input type="text" {{{attributes}}}>
+    {{> _autocompleteContainer ac}}
 </template>
 
 <template name="_textareaAutocomplete">
     <textarea {{{attributes}}}>
         {{{text}}}
     </textarea>
+    {{> _autocompleteContainer ac}}
 </template>
 
 <template name="_autocompleteContainer">
-    <div class='-sew-list-container' style='display: none; position: absolute;'>
-        <ul class='-sew-list'>
-        {{#each items}}
-            {{> _autocompleteItem}}
-        {{/each}}
-        </ul>
-    </div>
-</template>
-
-<template name="_autocompleteItem">
-    <li class="-sew-list-item"></li>
+    {{#if shown}}
+        <div class='-autocomplete-container' style='position: absolute;'>
+            <ul class='-autocomplete-list'>
+            {{#each items}}
+                <li class="-autocomplete-item">
+                    {{pluck ../currentField}}
+                </li>
+            {{/each}}
+            </ul>
+        </div>
+    {{/if}}
 </template>

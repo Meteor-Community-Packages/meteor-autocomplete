@@ -9,17 +9,18 @@ buildAttributeString = (obj) ->
     arr.push "\" "
   return arr.join ""
 
-Handlebars.registerHelper "inputAutocomplete", (rules, options) ->
+Handlebars.registerHelper "inputAutocomplete", (triggers, options) ->
   return new Handlebars.SafeString Template._inputAutocomplete
-    rules: rules
+    triggers: triggers
     attributes: buildAttributeString(options.hash)
+    ac: new AutoComplete(triggers)
 
-
-Handlebars.registerHelper "textareaAutocomplete", (rules, options) ->
+Handlebars.registerHelper "textareaAutocomplete", (triggers, options) ->
   return new Handlebars.SafeString Template._textareaAutocomplete
-    rules: rules
+    triggers: triggers
     attributes: buildAttributeString(options.hash)
     text: options.fn(this)
+    ac: new AutoComplete(triggers)
 
 # Events on template instances
 events =
@@ -31,16 +32,25 @@ events =
 Template._inputAutocomplete.events = events
 Template._textareaAutocomplete.events = events
 
-# Create new autocomplete class for each template instance
-create = ->
-  @_ac = new AutoComplete(this, this.data.rules)
-
-Template._inputAutocomplete.created = create
-Template._textareaAutocomplete.created = create
-
+# Set nodes on render
 init = ->
-  @_ac.element = @firstNode
-  @_ac.$element = $(@firstNode)
+  @data.ac.element = @firstNode
+  @data.ac.$element = $(@firstNode)
 
 Template._inputAutocomplete.rendered = init
 Template._textareaAutocomplete.rendered = init
+
+###
+  List rendering helpers
+###
+Template._autocompleteContainer.rendered = ->
+
+Template._autocompleteContainer.shown = -> @listShown()
+
+Template._autocompleteContainer.items = -> @filteredList()
+
+Template._autocompleteContainer.pluck = (field) -> this[field]
+
+Template._autocompleteContainer.events =
+  "click": (e, tmplInst) -> tmplInst.data.ac.onItemClick.call(this, e);
+  "mouseover": (e, tmplInst) -> tmplInst.data.ac.onItemHover.call(this, e);

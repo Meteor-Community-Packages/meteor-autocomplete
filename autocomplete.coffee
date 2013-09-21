@@ -1,5 +1,7 @@
 class @AutoComplete
 
+  @LIMIT: 5
+
   @KEYS: [
     40, # DOWN
     38, # UP
@@ -8,9 +10,14 @@ class @AutoComplete
     9   # TAB
   ]
 
-  constructor: (@tmplInst, @rules) ->
+  constructor: (@rules) ->
     # Expressions compiled for range from last word break to current cursor position
     @expressions = (new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$') for rule in rules)
+
+    # Reactive dependencies for current matching rule and filter
+    @ruleDep = new Deps.Dependency
+    @filterDep = new Deps.Dependency
+    @indexDep = new Deps.Dependency
 
   onKeyUp: (e) ->
     startpos = @$element.getCursorPosition()
@@ -26,29 +33,28 @@ class @AutoComplete
     while i < @expressions.length
       matches = val.match(@expression[i])
 
-      # Went from matching to not matching
+      # matching -> not matching
       if not matches and @matched is i
         @matched = -1
-        @dontFilter = false
-        @hideList()
-
+        @ruleDep.changed()
         breakLoop = true
 
-      #Went from not matching to matching
+      # not matching -> matching
       if matches and @matched is -1
-        @displayList()
-        @lastFilter = "\n"
         @matched = i
-
+        @ruleDep.changed()
         breakLoop = true
 
-      if matches and not @dontFilter
-        @filterList matches[2]
+      # Did filter change?
+      if matches and @filter isnt matches[2]
+        @filter = matches[2]
+        @filterDep.changed()
+        breakLoop = true
 
       break if breakLoop
 
   onKeyDown: (e) ->
-    return if not @listVisible or (@KEYS.indexOf(e.keyCode) < 0)
+    return if @matched is -1 or (@KEYS.indexOf(e.keyCode) < 0)
 
     switch e.keyCode
       when 9, 13 # TAB, ENTER
@@ -57,30 +63,28 @@ class @AutoComplete
         @next()
       when 38
         @prev()
-      when 27
-        @$itemList.hide()
-        @dontFilter = true
+      when 27 # ESCAPE; not sure what function this should serve, cause it's vacuous in jquery-sew
+        @matched = -1
+        @ruleDep.changed()
 
     e.preventDefault()
 
-  # Render the list
   onFocus: (values) ->
-    $("body").append @$itemList
-    container = @$itemList.find("ul").empty()
-    values.forEach $.proxy((e, i) ->
-      $item = $(Plugin.ITEM_TEMPLATE)
-      @options.elementFactory $item, e
-      e.element = $item.appendTo(container).bind("click", $.proxy(@onItemClick, this, e)).bind("mouseover", $.proxy(@onItemHover, this, i))
-    , this)
     @index = 0
     @hightlightItem()
 
-  # Get rid of the rendered list
   onBlur: ->
-    @$itemList.fadeOut "slow"
-    @cleanupHandle = window.setTimeout($.proxy(->
-      @$itemList.remove()
-    , this), 1000)
+    @matched = -1
+    @ruleDep.changed()
+
+  onItemClick: (element, e) ->
+    @replace element.val
+    @$element.trigger "mention-selected", @filtered[@index]
+    @hideList()
+
+  onItemHover: (index, e) ->
+    @index = index
+    @hightlightItem()
 
   # Replace text with currently selected item
   select: ->
@@ -90,29 +94,13 @@ class @AutoComplete
 
   # Select next item in list
   next: ->
-    @index = (@index + 1) % @filtered.length
-    @hightlightItem()
+    @index = (@index + 1) % @filterLength
+    @indexDep.changed()
 
   # Select previous item in list
   prev: ->
-    @index = (@index + @filtered.length - 1) % @filtered.length
-    @hightlightItem()
-
-  filterList: (val) ->
-    return  if val is @lastFilter
-    @lastFilter = val
-    @$itemList.find(".-sew-list-item").remove()
-    values = @options.values
-    vals = @filtered = values.filter($.proxy((e) ->
-      exp = new RegExp("\\W*" + @options.token + e.val + "(\\W|$)")
-      return false  if not @options.repeat and @getText().match(exp)
-      val is "" or e.val.toLowerCase().indexOf(val.toLowerCase()) >= 0 or (e.meta or "").toLowerCase().indexOf(val.toLowerCase()) >= 0
-    , this))
-    if vals.length
-      @renderElements vals
-      @$itemList.show()
-    else
-      @hideList()
+    @index = (@index + @filterLength - 1) % @filterLength
+    @indexDep.changed()
 
   # Replace the appropriate region
   replace: (replacement) ->
@@ -129,3 +117,33 @@ class @AutoComplete
   getText: ->
     return @$element.val() || @$element.text()
 
+  ###
+    Reactive functions
+  ###
+  listShown: ->
+    @ruleDep.depend()
+    return @matched >= 0
+
+  filteredList: ->
+    # @ruleDep.depend() # optional, cause list will always get re-rendered
+    @filterDep.depend()
+
+    return null if matched is -1
+
+    rule = @rules[matched]
+
+    args = {}
+    args[rule.field] =
+      $regex: @filter
+      $options: "i"
+
+    cursor = rule.collection.find(args, {limit: @LIMIT}) # MIND BLOWN!
+    @filterLength = cursor.count()
+    return cursor
+
+  highlightedId: ->
+    @indexDep.depend()
+    return @index
+
+  # TODO: this is just a stand-in for actual template rendering
+  currentField: -> @rules[matched].field
