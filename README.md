@@ -17,6 +17,7 @@ Features:
  - Multiple collection matching with different tokens and fields
  - Fully live and reactive Meteor template rendering of list items
  - Automatically positioned above or below text
+ - Mouse or keyboard interaction with autocomplete menu
 
 Meteor's client-side data availability makes this dynamic, full-fledged autocomplete widget possible. Use it in chat rooms, comments, other messaging systems, or whatever strikes your fancy.
 
@@ -93,4 +94,4 @@ Template.foo.settings = function() {
 ### Credits/Notes
 
 - If you are not using Meteor, you may want to check out [jquery sew](https://github.com/tactivos/jquery-sew), from which this was heavily modified.
-- If you need tag autocompletion only (and no symbols), try either the [x-editable smart package](https://github.com/nate-strauser/meteor-x-editable-bootstrap) with Select2 or [jquery-tokenInput](http://loopj.com/jquery-tokeninput/).
+- If you need tag autocompletion only (from one collection, and no text), try either the [x-editable smart package](https://github.com/nate-strauser/meteor-x-editable-bootstrap) with Select2 or [jquery-tokenInput](http://loopj.com/jquery-tokeninput/). Those support rendering DOM elements in the input field.
