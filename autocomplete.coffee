@@ -33,7 +33,7 @@ class @AutoComplete
     i = 0
     breakLoop = false
     while i < @expressions.length
-      matches = val.match(@expression[i])
+      matches = val.match(@expressions[i])
 
       # matching -> not matching
       if not matches and @matched is i
@@ -54,13 +54,15 @@ class @AutoComplete
         breakLoop = true
 
       break if breakLoop
+      i++
 
-  onKeyDown: (e) ->
-    return if @matched is -1 or (@KEYS.indexOf(e.keyCode) < 0)
+  onKeyDown: (e) =>
+    return if @matched is -1 or (@constructor.KEYS.indexOf(e.keyCode) < 0)
 
     switch e.keyCode
       when 9, 13 # TAB, ENTER
         @select()
+        e.stopPropagation() # Don't jump fields or submit
       when 40
         @next()
       when 38
@@ -70,44 +72,47 @@ class @AutoComplete
 
     e.preventDefault()
 
-  onFocus: @onKeyUp
+  onFocus: ->
+    @matched = -1
+    @onKeyUp()
 
-  onBlur: @hideList
+  onBlur: ->
+    # We need to delay this so click events work
+    # TODO this is a bit of a hack; see if we can't be smarter
+    Meteor.setTimeout =>
+      @hideList()
+    , 500
 
-  onItemClick: (doc, e) ->
+  onItemClick: (doc, e) =>
     @replace doc[@rules[@matched].field]
     @hideList()
 
-  onItemHover: (index, e) ->
-    @index = index
-    @hightlightItem()
+  onItemHover: (doc, e) ->
+    Session.set("-autocomplete-id", doc._id)
 
   # Replace text with currently selected item
   select: ->
-    docId = Deps.nonreactive Session.get("-autocomplete-id")
+    docId = Deps.nonreactive(-> Session.get("-autocomplete-id"))
     rule = @rules[@matched]
     @replace rule.collection.findOne(docId)[rule.field]
     @hideList()
 
   # Select next item in list
   next: ->
-    next = $(@tmplInst.find("-autocomplete-item selected")).next()
+    next = $(@tmplInst.find(".-autocomplete-item.selected")).next()
     if next.length
       nextId = Spark.getDataContext(next[0])._id
-    else
-      # Go back to first first item
-      nextId = Spark.getDataContext(@tmplInst.find("-autocomplete-item"))._id
+    else # End of list or lost selection; Go back to first item
+      nextId = Spark.getDataContext(@tmplInst.find(".-autocomplete-item:first-child"))._id
     Session.set("-autocomplete-id", nextId)
 
   # Select previous item in list
   prev: ->
-    prev = $(@tmplInst.find("-autocomplete-item selected")).prev()
+    prev = $(@tmplInst.find(".-autocomplete-item.selected")).prev()
     if prev.length
       prevId = Spark.getDataContext(prev[0])._id
-    else
-      # Go to end of list
-      last = $(@tmplInst.find("-autocomplete-container")).find(":last-child")
-      prevId = Spark.getDataContext(last[0])._id
+    else # Beginning of list or lost selection; Go to end of list
+      prevId = Spark.getDataContext(@tmplInst.find(".-autocomplete-item:last-child"))._id
     Session.set("-autocomplete-id", prevId)
 
   # Replace the appropriate region
@@ -160,3 +165,18 @@ class @AutoComplete
   # and will cause all of the items to re-render anyway
   currentTemplate: -> @rules[@matched].template
 
+  getMenuPositioning: ->
+    position = @$element.position()
+    offset = @$element.getCaretPosition(@position)
+
+    if @position is "top"
+      # Do some additional calculation to position menu from bottom
+      return {
+        left: position.left + offset.left
+        bottom: @$element.offsetParent().height() - position.top + @$element.height() - offset.top
+      }
+    else
+      return {
+        left: position.left + offset.left
+        top: position.top + offset.top
+      }

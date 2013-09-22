@@ -1,6 +1,8 @@
 /**
  * jQuery plugin for getting position of cursor in textarea
-
+ *
+ * Modified; originally from
+ * https://github.com/beviz/jquery-caret-position-getter
  * @license under GNU license
  * @author Bevis Zhao (i@bevis.me, http://bevis.me)
  */
@@ -34,8 +36,11 @@ $(function() {
                 .split(' ').join('<span style="white-space:prev-wrap">&nbsp;</span>');
         },
         // calculate position
-        getCaretPosition: function() {
+        getCaretPosition: function(whichEnd) {
             var cal = calculator, self = this, element = self[0], elementOffset = self.offset();
+
+            var isTop = (whichEnd === "top");
+            var caretHeight = parseInt(self.getComputedStyle("fontSize"));
 
             // IE has easy way to get caret offset position
             if ($.browser.msie && $.browser.version <= 9) {
@@ -46,7 +51,7 @@ $(function() {
                 return {
                     left: range.boundingLeft - elementOffset.left,
                     top: parseInt(range.boundingTop) - elementOffset.top + element.scrollTop
-                        + document.documentElement.scrollTop + parseInt(self.getComputedStyle("fontSize"))
+                        + document.documentElement.scrollTop + (!isTop ? caretHeight : 0)
                 };
             }
 
@@ -73,10 +78,16 @@ $(function() {
             cal.simulator.append(before).append(focus).append(after);
             var focusOffset = focus.offset(), simulatorOffset = cal.simulator.offset();
             // alert(focusOffset.left  + ',' +  simulatorOffset.left + ',' + element.scrollLeft);
+
+            // For bottom, calculate and add the font height except Firefox
+            var adjustment;
+            if ($.browser.mozilla)
+                adjustment = isTop ? -caretHeight : 0;
+            else
+                adjustment = isTop ? 0 : caretHeight;
+
             return {
-                top: focusOffset.top - simulatorOffset.top - element.scrollTop
-                    // calculate and add the font height except Firefox
-                    + ($.browser.mozilla ? 0 : parseInt(self.getComputedStyle("fontSize"))),
+                top: focusOffset.top - simulatorOffset.top - element.scrollTop + adjustment,
                 left: focus[0].offsetLeft -  cal.simulator[0].offsetLeft - element.scrollLeft
             };
         }

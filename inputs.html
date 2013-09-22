@@ -14,11 +14,15 @@
     {{#if shown}}
     <div class='-autocomplete-container' style='position: absolute;'>
         <ul class='-autocomplete-list'>
+            {{! Because the computation of items is itself reactive (not just the cursor)
+                it needs isolation, but must remain in this template to access the data context }}
+            {{#isolate}}
             {{#each items}}
             <li class="-autocomplete-item {{selected}}">
                 {{itemTemplate ..}}
             </li>
             {{/each}}
+            {{/isolate}}
         </ul>
     </div>
     {{/if}}

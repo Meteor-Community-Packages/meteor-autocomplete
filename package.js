@@ -8,8 +8,9 @@ Package.on_use(function (api) {
 
     // Our files
     api.add_files([
+        'autocomplete.css',
         'inputs.html',
-        'caretposition.js',
+        'jquery.caretposition.js',
         'autocomplete.coffee',
         'templates.coffee'
     ], 'client');

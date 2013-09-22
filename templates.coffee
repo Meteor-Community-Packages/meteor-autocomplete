@@ -43,18 +43,31 @@ Template._textareaAutocomplete.rendered = init
   List rendering helpers
 ###
 Template._autocompleteContainer.rendered = ->
-  return if @rendered
-  # Pick the first item on first render, also need to set css
+  showing = @data.listShown()
+
+  if showing and not @showing
+    # Pick the first item and set css whenever list gets shown
+    $(@find(".-autocomplete-container")).css(@data.getMenuPositioning())
+
+    pickData = Spark.getDataContext(@find(".-autocomplete-item"))
+    Session.set("-autocomplete-id", pickData._id)
+
+  @showing = showing
+
+# Retain CSS position across re-rendering. Mechanics will probably change in future Meteor versions.
+Template._autocompleteContainer.preserve = [ ".-autocomplete-container" ]
 
 Template._autocompleteContainer.events =
-  "click": (e, tmplInst) -> tmplInst.data.ac.onItemClick.call(this, e);
-  "mouseover": (e, tmplInst) -> tmplInst.data.ac.onItemHover.call(this, e);
+  # tmplInst.data is the AutoComplete instance
+  "click .-autocomplete-item": (e, tmplInst) -> tmplInst.data.onItemClick(this, e)
+  "mouseenter .-autocomplete-item": (e, tmplInst) -> tmplInst.data.onItemHover(this, e)
 
 Template._autocompleteContainer.shown = -> @listShown()
 
 Template._autocompleteContainer.items = -> @filteredList()
 
-Template._autocompleteContainer.selected = -> Session.equals("-autocomplete-id", @_id)
+Template._autocompleteContainer.selected = ->
+  if Session.equals("-autocomplete-id", @_id) then "selected" else ""
 
 Template._autocompleteContainer.itemTemplate = (ac) ->
   new Handlebars.SafeString( ac.currentTemplate()(this) )
