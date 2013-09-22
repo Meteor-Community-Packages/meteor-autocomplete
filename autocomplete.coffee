@@ -21,7 +21,7 @@ class @AutoComplete
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
     @filterDep = new Deps.Dependency
-    Session.set("-autocomplete-id", ""); # Use this for Session.equals()
+    Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
   onKeyUp: (e) ->
     startpos = @$element.getCursorPosition() # TODO: this doesn't seem to be correct on a focus
@@ -63,8 +63,7 @@ class @AutoComplete
 
     switch e.keyCode
       when 9, 13 # TAB, ENTER
-        @select()
-        e.stopPropagation() # Don't jump fields or submit
+        e.stopPropagation() if @select() # Don't jump fields or submit if select successful
       when 40
         @next()
       when 38
@@ -93,13 +92,19 @@ class @AutoComplete
   # Replace text with currently selected item
   select: ->
     docId = Deps.nonreactive(-> Session.get("-autocomplete-id"))
+    return false unless docId # Don't select if nothing matched
+
     rule = @rules[@matched]
     @replace rule.collection.findOne(docId)[rule.field]
     @hideList()
+    return true
 
   # Select next item in list
   next: ->
-    next = $(@tmplInst.find(".-autocomplete-item.selected")).next()
+    currentItem = @tmplInst.find(".-autocomplete-item.selected")
+    return unless currentItem # Don't try to iterate an empty list
+
+    next = $(currentItem).next()
     if next.length
       nextId = Spark.getDataContext(next[0])._id
     else # End of list or lost selection; Go back to first item
@@ -108,7 +113,10 @@ class @AutoComplete
 
   # Select previous item in list
   prev: ->
-    prev = $(@tmplInst.find(".-autocomplete-item.selected")).prev()
+    currentItem = @tmplInst.find(".-autocomplete-item.selected")
+    return unless currentItem # Don't try to iterate an empty list
+
+    prev = $(currentItem).prev()
     if prev.length
       prevId = Spark.getDataContext(prev[0])._id
     else # Beginning of list or lost selection; Go to end of list

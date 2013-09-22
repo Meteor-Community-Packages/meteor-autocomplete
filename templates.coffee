@@ -46,11 +46,24 @@ Template._autocompleteContainer.rendered = ->
   showing = @data.ruleMatched()
 
   if showing and not @showing
-    # Pick the first item and set css whenever list gets shown
+    # First render; Pick the first item and set css whenever list gets shown
     $(@find(".-autocomplete-container")).css(@data.getMenuPositioning())
 
-    pickData = Spark.getDataContext(@find(".-autocomplete-item"))
-    Session.set("-autocomplete-id", pickData._id)
+    # Select something if there is anything in the list
+    # Shouldn't need to clear id on first render if list cleans up after itself properly
+    item = @find(".-autocomplete-item")
+    Session.set("-autocomplete-id", Spark.getDataContext(item)._id) if item
+  else if showing
+    # Re-render; make sure selected item is something in the list or none if list empty
+    selectedItem = @find(".-autocomplete-item.selected")
+
+    # TODO: this logic will change once we fix the empty list thing
+    unless selectedItem
+      newItem = @find(".-autocomplete-item") # Select anything
+      if newItem
+        Session.set("-autocomplete-id", Spark.getDataContext(newItem)._id)
+      else
+        Session.set("-autocomplete-id", null)
 
   @showing = showing
 
