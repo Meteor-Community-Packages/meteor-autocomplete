@@ -43,7 +43,7 @@ Template._textareaAutocomplete.rendered = init
   List rendering helpers
 ###
 Template._autocompleteContainer.rendered = ->
-  showing = @data.listShown()
+  showing = @data.ruleMatched()
 
   if showing and not @showing
     # Pick the first item and set css whenever list gets shown
@@ -54,15 +54,19 @@ Template._autocompleteContainer.rendered = ->
 
   @showing = showing
 
+# Don't allow items to be selected if the list empties
+# TODO: make this more fine-grained for each item
+Template._autocompleteContainer.destroyed = -> Session.set("-autocomplete-id", "")
+
 # Retain CSS position across re-rendering. Mechanics will probably change in future Meteor versions.
-Template._autocompleteContainer.preserve = [ ".-autocomplete-container" ]
+# Template._autocompleteContainer.preserve = [ ".-autocomplete-container" ]
 
 Template._autocompleteContainer.events =
   # tmplInst.data is the AutoComplete instance
   "click .-autocomplete-item": (e, tmplInst) -> tmplInst.data.onItemClick(this, e)
   "mouseenter .-autocomplete-item": (e, tmplInst) -> tmplInst.data.onItemHover(this, e)
 
-Template._autocompleteContainer.shown = -> @listShown()
+Template._autocompleteContainer.shown = -> @ruleMatched() # TODO: and list isnt empty
 
 Template._autocompleteContainer.items = -> @filteredList()
 

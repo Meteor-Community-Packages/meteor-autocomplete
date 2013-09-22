@@ -16,13 +16,15 @@ class @AutoComplete
     # Expressions compiled for range from last word break to current cursor position
     @expressions = (new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$') for rule in @rules)
 
+    @matched = -1
+
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
     @filterDep = new Deps.Dependency
     Session.set("-autocomplete-id", ""); # Use this for Session.equals()
 
   onKeyUp: (e) ->
-    startpos = @$element.getCursorPosition()
+    startpos = @$element.getCursorPosition() # TODO: this doesn't seem to be correct on a focus
     val = @getText().substring(0, startpos)
 
     ###
@@ -72,9 +74,7 @@ class @AutoComplete
 
     e.preventDefault()
 
-  onFocus: ->
-    @matched = -1
-    @onKeyUp()
+  onFocus: -> @onKeyUp()
 
   onBlur: ->
     # We need to delay this so click events work
@@ -143,7 +143,7 @@ class @AutoComplete
   ###
     Reactive/rendering functions
   ###
-  listShown: ->
+  ruleMatched: ->
     @ruleDep.depend()
     return @matched >= 0
 
