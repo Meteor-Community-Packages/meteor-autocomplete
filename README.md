@@ -51,22 +51,24 @@ Define a helper for the first argument like the following:
 
 ```coffeescript
 Template.foo.settings = function() {
-  position: "top",
-  limit: 5,
-  rules: [
-    {
-      token: '@',
-      collection: Meteor.users,
-      field: "username",
-      template: Template.userPill
-    },
-    {
-      token: '!',
-      collection: Dataset,
-      field: "_id",
-      template: Template.dataPiece
-    }
-  ]
+  return {
+   position: "top",
+   limit: 5,
+   rules: [
+     {
+       token: '@',
+       collection: Meteor.users,
+       field: "username",
+       template: Template.userPill
+     },
+     {
+       token: '!',
+       collection: Dataset,
+       field: "_id",
+       template: Template.dataPiece
+     }
+   ]
+  }
 };
 ```
 
