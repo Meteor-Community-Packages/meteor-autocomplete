@@ -72,6 +72,13 @@ Template.foo.settings = function() {
 };
 ```
 
+Example of an autocomplete template:
+```
+<template name="userPill">
+    <span class="label {{labelClass}}">{{username}}</span>
+</template>
+```
+
 - `position` (= `top` or `bottom`) specifies if the autocomplete menu should render above or below the cursor. Select based on the placement of your `input`/`textarea` relative to other elements on the page.
 - `limit` controls how big the autocomplete menu should get.
 - `rules`: an array of matching rules for the autocomplete widget, which will be checked in order
