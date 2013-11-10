@@ -72,13 +72,6 @@ Template.foo.settings = function() {
 };
 ```
 
-Example of an autocomplete template:
-```
-<template name="userPill">
-    <span class="label {{labelClass}}">{{username}}</span>
-</template>
-```
-
 - `position` (= `top` or `bottom`) specifies if the autocomplete menu should render above or below the cursor. Select based on the placement of your `input`/`textarea` relative to other elements on the page.
 - `limit` controls how big the autocomplete menu should get.
 - `rules`: an array of matching rules for the autocomplete widget, which will be checked in order
@@ -86,6 +79,13 @@ Example of an autocomplete template:
 - `collection`: what collection should be used to match for this rule
 - `field`: the field of the collection that the rule will match against
 - `template`: the template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+
+Example of an autocomplete template:
+```
+<template name="userPill">
+    <span class="label">{{username}}</span>
+</template>
+```
 
 ### Future Work (a.k.a. send pull requests)
 
