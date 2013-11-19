@@ -98,3 +98,9 @@ Template.foo.settings = function() {
 
 - If you are not using Meteor, you may want to check out [jquery sew](https://github.com/tactivos/jquery-sew), from which this was heavily modified.
 - If you need tag autocompletion only (from one collection, and no text), try either the [x-editable smart package](https://github.com/nate-strauser/meteor-x-editable-bootstrap) with Select2 or [jquery-tokenInput](http://loopj.com/jquery-tokeninput/). Those support rendering DOM elements in the input field.
+
+### Contributors
+
+Andrew Mao ([mizzao](https://github.com/mizzao))
+Patrick Coffey ([patrickocoffeyo](https://github.com/patrickocoffeyo))
+Tessa Lau ([tlau](https://github.com/tlau))
