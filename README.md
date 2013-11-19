@@ -49,7 +49,7 @@ Add a text `input` or `textarea` to a template in one of the following ways, as 
 
 Define a helper for the first argument like the following:
 
-```coffeescript
+```javascript
 Template.foo.settings = function() {
   return {
    position: "top",
@@ -80,12 +80,36 @@ Template.foo.settings = function() {
 - `field`: the field of the collection that the rule will match against
 - `template`: the template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 
-Example of an autocomplete template:
+An autocomplete template is just a normal Meteor template that is passed in the matched document. For example, if you were matching on `Meteor.users` and you just wanted to display the username, you can do something very simple, and display the same field:
+
 ```
 <template name="userPill">
     <span class="label">{{username}}</span>
 </template>
 ```
+
+However, you might want to do something a little more fancy and show not only the user, but whether they are online or not (with something like the [user-status](https://github.com/mizzao/meteor-user-status) package. In that case you could do something like the following:
+
+```
+<template name="userPill">
+    <span class="label {{labelClass}}">{{username}}</span>
+</template>
+```
+
+and accompanying code:
+
+```javascript
+Template.userPill.labelClass = function() {
+  if this._id === Meteor.userId()
+    return "label-warning"
+  else if this.profile.online === true
+    return "label-success"
+  else
+    return ""
+}
+```
+
+This (using normal Bootstrap classes) will cause the user to show up in orange for him/herself, in green for other users that are online, and in grey otherwise. See [CrowdMapper's templates](https://github.com/mizzao/CrowdMapper/blob/master/client/views/common.html) for other interesting things you may want to do.
 
 ### Future Work (a.k.a. send pull requests)
 
@@ -108,6 +132,7 @@ Example of an autocomplete template:
 
 ### Contributors
 
-Andrew Mao ([mizzao](https://github.com/mizzao))
-Patrick Coffey ([patrickocoffeyo](https://github.com/patrickocoffeyo))
-Tessa Lau ([tlau](https://github.com/tlau))
+- Andrew Mao ([mizzao](https://github.com/mizzao))
+- Patrick Coffey ([patrickocoffeyo](https://github.com/patrickocoffeyo))
+- Alexey Komissarouk ([AlexeyMK](https://github.com/AlexeyMK))
+- Tessa Lau ([tlau](https://github.com/tlau))
