@@ -80,6 +80,13 @@ Template.foo.settings = function() {
 - `field`: the field of the collection that the rule will match against
 - `template`: the template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 
+Example of an autocomplete template:
+```
+<template name="userPill">
+    <span class="label">{{username}}</span>
+</template>
+```
+
 ### Future Work (a.k.a. send pull requests)
 
 - Allow publish/subscribe for autocomplete in addition to client-side search, making autocompletion for potentially much larger collections possible with a small latency hit. Should be pretty easy to do (just move find cursor to a publication instead of updating on the client) but not sure how common this use case is. Raise an issue or try this in a fork if you really want it.
