@@ -113,6 +113,7 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 
 ### Future Work (a.k.a. send pull requests)
 
+- Provide autocompletion without a trigger character, like the simpler [autocompletion](https://atmosphere.meteor.com/package/autocompletion) package
 - Allow publish/subscribe for autocomplete in addition to client-side search, making autocompletion for potentially much larger collections possible with a small latency hit. Should be pretty easy to do (just move find cursor to a publication instead of updating on the client) but not sure how common this use case is. Raise an issue or try this in a fork if you really want it.
 - The widget can keep track of a list of ordered document ids for matched items instead of just spitting out the fields (which currently should be unique)
 - Could potentially support rendering DOM elements instead of just text. However, this can currently be managed in post-processing code for chat/post functions (like how GitHub does it).
