@@ -5,5 +5,7 @@
     "author": "Andrew Mao  (https://github.com/mizzao/)",
     "version": "0.1.0",
     "git": "https://github.com/mizzao/meteor-autocomplete.git",
-    "packages": {}
+    "packages": {
+      "jquery-migrate": ""
+    }
 }
