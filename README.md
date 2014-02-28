@@ -80,6 +80,8 @@ Template.foo.settings = function() {
 - `field`: the field of the collection that the rule will match against
 - `template`: the template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 
+**Simple autocompletion**: If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
+
 An autocomplete template is just a normal Meteor template that is passed in the matched document. For example, if you were matching on `Meteor.users` and you just wanted to display the username, you can do something very simple, and display the same field:
 
 ```
@@ -119,7 +121,7 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 
 ### Known Issues
 
-- Empty list (and css shadow) renders if rule activated but no matches (a reactivity headache otherwise, requires some though to rewrite)
+- Empty list (and css shadow) renders if rule activated but no matches (a reactivity headache otherwise, requires some thought to rewrite)
 - Cursor position may be incorrect on a focus
 - Regexp only matches from beginning to cursor position in word (done in jquery-sew, could use rewrite)
 - Escape key behavior copied from jquery-sew but it's rather vacuous
