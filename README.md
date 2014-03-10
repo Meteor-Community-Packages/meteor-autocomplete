@@ -1,11 +1,11 @@
 meteor-autocomplete
 ===================
 
-Prefix auto-completion using documents and fields in local Meteor collections.
+Prefix auto-completion using documents and fields in client- or server-side Meteor collections.
 
 ## What's this do?
 
-Auto-completes typing in text `input`s or `textarea`s from different Meteor collections when triggered by certain symbols. You've probably seen this when referring to users or issues in a GitHub conversation. For example, you may want to ping a user:
+Auto-completes typing in text `input`s or `textarea`s from different local or remote Meteor collections when triggered by certain symbols. You've probably seen this when referring to users or issues in a GitHub conversation. For example, you may want to ping a user:
 
 ![Autocompleting a user](https://raw.github.com/mizzao/meteor-autocomplete/master/docs/mention1.png)
 
@@ -73,12 +73,16 @@ Template.foo.settings = function() {
 ```
 
 - `position` (= `top` or `bottom`) specifies if the autocomplete menu should render above or below the cursor. Select based on the placement of your `input`/`textarea` relative to other elements on the page.
-- `limit` controls how big the autocomplete menu should get.
-- `rules`: an array of matching rules for the autocomplete widget, which will be checked in order
-- `token`: what character should trigger this rule
-- `collection`: what collection should be used to match for this rule
-- `field`: the field of the collection that the rule will match against
-- `template`: the template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+- `limit`: Controls how big the autocomplete menu should get.
+- `rules`: An array of matching rules for the autocomplete widget, which will be checked in order
+- `token`: What character should trigger this rule
+- `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a String for remote collections.
+- `autocompleteRecordSet`: `null` (default) to use out-of-the-box (but slower) server-side code to search the collection for matches. To speed things up, create a publication in your server code (modeled after [`autocomplete-server.coffee`](autocomplete-server.coffee)) and set `autocompleteRecordSet` to its name. Having indexes on relevant fields, or otherwise [searching efficiently for text](http://docs.mongodb.org/manual/tutorial/search-for-text/) will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match.
+- `preferStartWithFilter`: `false` (default) to return any fields that contain the filter text anywhere within. Set to `true` to prioritize records where the field *starts with* the filter. For example, if `true`, a search for 'ba' will return 'bar' and 'baz' before 'abacus', and might be somewhat slower. Otherwise, the order would be 'abacus', 'bar', 'baz'.
+- `field`: The field of the collection that the rule will match against
+- `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+
+Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`.
 
 **Simple autocompletion**: If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
 
@@ -115,7 +119,7 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 
 ### Future Work (a.k.a. send pull requests)
 
-- Allow publish/subscribe for autocomplete in addition to client-side search, making autocompletion for potentially much larger collections possible with a small latency hit. Should be pretty easy to do (just move find cursor to a publication instead of updating on the client) but not sure how common this use case is. Raise an issue or try this in a fork if you really want it.
+- To reduce latency, the server could use `Meteor.methods` to return an array of documents, instead of pub/sub, if the client's cache of the collection is assumed to be read-only.
 - The widget can keep track of a list of ordered document ids for matched items instead of just spitting out the fields (which currently should be unique)
 - Could potentially support rendering DOM elements instead of just text. However, this can currently be managed in post-processing code for chat/post functions (like how GitHub does it).
 
@@ -138,3 +142,4 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 - Patrick Coffey ([patrickocoffeyo](https://github.com/patrickocoffeyo))
 - Alexey Komissarouk ([AlexeyMK](https://github.com/AlexeyMK))
 - Tessa Lau ([tlau](https://github.com/tlau))
+- Dan Dascalescu ([dandv](https://github.com/dandv))
