@@ -13,7 +13,7 @@ class @AutoComplete
     @position = settings.position || "bottom"
 
     @rules = settings.rules
-    # Expressions compiled for range from last word break to current cursor position
+    # Expressions compiled for the range from the last word break to the current cursor position
     @expressions = (new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$') for rule in @rules)
 
     @matched = -1
@@ -21,15 +21,43 @@ class @AutoComplete
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
     @filterDep = new Deps.Dependency
+    
+    # autosubscribe to the record set published by the server based on the filter
+    self = @
+    Deps.autorun ->
+      if (filter = self.getFilter()) and (rule = self.getRule())
+        if typeof rule.collection is "string"  # subscribe only for server-side collections
+          # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
+          if rule.autocompleteRecordset  # user-managed publication/subscription
+            Meteor.subscribe(rule.autocompleteRecordset, rule.collection, rule.field, filter, self.limit, rule.preferStartWithFilter)
+          else  # we provide our own slower but functional out-of-the-box publication
+            Meteor.subscribe("meteor-autocomplete-recordset", rule.collection, rule.field, filter, self.limit, rule.preferStartWithFilter)
+
     Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
+  # reactive getters and setters for @filter and the currently matched rule
+  getRule: -> if @ruleMatched() then @rules[@matched] else null
+
+  setRuleMatched: (i) ->
+    @matched = i
+    @ruleDep.changed()
+
+  getFilter: ->
+    @filterDep.depend()
+    return @filter
+
+  setFilter: (x) ->
+    @filter = x
+    @filterDep.changed()
+    return @filter
+
   onKeyUp: (e) ->
-    startpos = @$element.getCursorPosition() # TODO: this doesn't seem to be correct on a focus
+    startpos = @$element.getCursorPosition() # TODO: this is incorrect on autofocus
     val = @getText().substring(0, startpos)
 
     ###
       Matching on multiple expressions.
-      We always go from an matched state to an unmatched one
+      We always go from a matched state to an unmatched one
       before going to a different matched one.
     ###
     i = 0
@@ -39,20 +67,17 @@ class @AutoComplete
 
       # matching -> not matching
       if not matches and @matched is i
-        @matched = -1
-        @ruleDep.changed()
+        @setRuleMatched(-1)
         breakLoop = true
 
       # not matching -> matching
       if matches and @matched is -1
-        @matched = i
-        @ruleDep.changed()
+        @setRuleMatched(i)
         breakLoop = true
 
       # Did filter change?
       if matches and @filter isnt matches[2]
-        @filter = matches[2]
-        @filterDep.changed()
+        @setFilter(matches[2])
         breakLoop = true
 
       break if breakLoop
@@ -135,9 +160,7 @@ class @AutoComplete
     @setText finalFight
     @$element.setCursorPosition val.length + 1
 
-  hideList: ->
-    @matched = -1
-    @ruleDep.changed()
+  hideList: -> @setRuleMatched(-1)
 
   getText: ->
     return @$element.val() || @$element.text()
@@ -156,18 +179,47 @@ class @AutoComplete
     return @matched >= 0
 
   filteredList: ->
-    # @ruleDep.depend() # optional as long as we use filterDep, cause list will always get re-rendered
+    # @ruleDep.depend() # optional as long as we use filterDep, because list will always get re-rendered
     @filterDep.depend()
     return null if @matched is -1
 
     rule = @rules[@matched]
 
-    args = {}
-    args[rule.field] =
-      $regex: @filter # MIND BLOWN!
+    fieldspec = {}
+    fieldspec[rule.field] = 1
+    collection = if typeof rule.collection is "string" then window[rule.collection] else rule.collection
+
+    selector = {}
+    if not rule.preferStartWithFilter  # easy case, suboptimal user experience
+      selector[rule.field] =
+        $regex: @filter
+        $options: 'i'
+      return collection.find(selector, { sort: fieldspec, limit: @limit })
+
+    # For the best user experience, fields startig with @filter should be returned first.
+    # The server does that, but preserving the order while publishing the filtered
+    # recordset down the wire is impossible - https://github.com/meteor/meteor/issues/821
+    # And we can't sort by a field added via `transform` either, thanks to @glasser - https://github.com/meteor/meteor/issues/1852
+    # Therefore, we have to replicate the computation on the client.
+    selector[rule.field] =
+      $regex: "^" + @filter
       $options: "i"
 
-    return rule.collection.find(args, {limit: @limit})
+    resultsStart = collection.find(selector, { sort: fieldspec, limit: @limit })
+    found = resultsStart.count()
+    return resultsStart if found >= @limit  # found can't possibly be > limit, but better be paranoid
+
+    # Not all results started with @filter, so return the ones that don't, after those that do
+    alreadyFound = resultsStart.map (record) -> record._id
+    resultsStart.rewind()
+    selector[rule.field].$regex = @filter
+    selector._id = { $nin: alreadyFound }
+    resultsRest = collection.find(
+      selector,
+      { sort: fieldspec, limit: @limit - found }
+    )
+    return resultsStart.fetch().concat(resultsRest.fetch())
+
 
   # This doesn't need to be reactive because list already changes reactively
   # and will cause all of the items to re-render anyway
