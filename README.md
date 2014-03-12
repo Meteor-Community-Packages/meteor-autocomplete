@@ -143,3 +143,5 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 - Alexey Komissarouk ([AlexeyMK](https://github.com/AlexeyMK))
 - Tessa Lau ([tlau](https://github.com/tlau))
 - Dan Dascalescu ([dandv](https://github.com/dandv))
+
+If you found this package useful, I gratefully accept donations at [Gittip](https://www.gittip.com/mizzao/).
