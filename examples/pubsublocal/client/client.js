@@ -12,18 +12,16 @@ Template.body.settings = {
       token: '@',
       // string means a server-side collection; otherwise, assume a client-side collection
       collection: 'BigCollection',
-      // name of the server publication that does the autocompletion filtering
-      // autocompleteRecordSet: 'my-records-autocomplete',  // missing means automatic pub/sub
       field: 'name',
-      // set to false for faster, but less sorted results. Filter string can be anywhere in the field.
-      preferStartWithFilter: false,  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
+      // set to true to search anywhere in the field, which cannot use an index.
       template: Template.serverCollectionPill
     },
     {
       token: '!',
       collection: Fruits,  // Meteor.Collection object means client-side collection
       field: 'type',
-      template: Template.clientCollectionPill
+      template: Template.clientCollectionPill,
+      matchAll: true  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
     }
   ]
 };

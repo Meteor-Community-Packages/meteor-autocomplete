@@ -7,31 +7,38 @@
 </body>
 
 <template name="body">
-  <h2>Server-side pub/sub autocomplete</h2>
-  <p>The server contains 160,000 records - all the 4-letter words that can be typed using the letters 'a' through 't'</p>
-  <p>That is, from 'aaaa' to 'tttt'. Letters in the 'uvwxyz' set will produce an autocomplete miss.</p>
-  <p>The trigger character is '@'. Limit was set to 30 to emphasize matches outside strings <em>starting</em> with the filter.</p>
-  <h2>Client-only autocomplete</h2>
-  <p>There's also a client-only collection. Type '!' then some fruit names.</p>
-  {{inputAutocomplete settings id="autocomplete-input" class="input-xlarge" placeholder="Type here..." autofocus="autofocus"}}
-  <h2>Tests to try</h2>
-  <code>
-    <ol style="padding-left:18em">
-      <li>@a &nbsp; => aaaa, aaab, ..., aaat, atba, aabb, ..., aabj</li>
-      <li>@j &nbsp; => jaaa, jaab, ..., jaat, jaba, jabb, ..., jabj</li>
-      <li>@z &nbsp; => [nothing]</li>
-      <li>@aaa => aaaa, aaab, ..., aaat, baaa, caaa, ..., kaaa</li>
-      <li>@ttt => ttta, tttb, ..., tttt, attt, bttt, ..., jttt</li>
-      <li>@mete => mete</li>
-      <li>@meteor => [nothing]</li>
-    </ol>
-  </code>
+    <div class="container">
+      <h2>Server-side pub/sub autocomplete</h2>
+      <p>The server contains 160,000 records - all the 4-letter words that can be typed using the letters 'a' through 't'</p>
+      <p>That is, from 'aaaa' to 'tttt'. Letters in the 'uvwxyz' set will produce an autocomplete miss.</p>
+      <p>The trigger character is '@'. Limit was set to 30 to emphasize matches outside strings <em>starting</em> with the filter.</p>
+
+      <h2>Client-only autocomplete</h2>
+      <p>There's also a client-only collection. Type '!' then some fruit names.</p>
+
+      <div class="well">
+      {{inputAutocomplete settings id="autocomplete-input" class="input-xlarge" placeholder="Type here..." autofocus="autofocus"}}
+      </div>
+
+      <h2>Tests to try</h2>
+      <code>
+        <ol>
+          <li>@a &nbsp; => aaaa, aaab, ..., aaat, atba, aabb, ..., aabj</li>
+          <li>@j &nbsp; => jaaa, jaab, ..., jaat, jaba, jabb, ..., jabj</li>
+          <li>@z &nbsp; => [nothing]</li>
+          <li>@aaa => aaaa, aaab, ..., aaat, baaa, caaa, ..., kaaa</li>
+          <li>@ttt => ttta, tttb, ..., tttt, attt, bttt, ..., jttt</li>
+          <li>@mete => mete</li>
+          <li>@meteor => [nothing]</li>
+        </ol>
+      </code>
+    </div>
 </template>
 
 <template name="serverCollectionPill">
-  {{name}} <small style="color: grey">({{_id}})</small>
+  {{name}} <small class="muted">({{_id}})</small>
 </template>
 
 <template name="clientCollectionPill">
-  {{type}} <small style="color: grey">({{_id}})</small>
+  {{type}} <small class="muted">({{_id}})</small>
 </template>

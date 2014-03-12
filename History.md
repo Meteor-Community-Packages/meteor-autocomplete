@@ -1,6 +1,6 @@
-## v0.2.0
+## vNEXT
+
 * Added server-side (pub/sub) autocompletion (#6 - @dandv)
-* Added sorting of matched records to prioritize filter matches at the start of the field
 
 ## v0.1.1
 

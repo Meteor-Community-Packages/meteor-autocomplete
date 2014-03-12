@@ -13,6 +13,7 @@
 <template name="_autocompleteContainer">
     {{#if shown}}
     <div class='-autocomplete-container' style='position: absolute;'>
+        {{#if isLoaded}}
         <ul class='-autocomplete-list'>
             {{! Because the computation of items is itself reactive (not just the cursor)
                 it needs isolation, but must remain in this template to access the data context }}
@@ -24,6 +25,9 @@
             {{/each}}
             {{/isolate}}
         </ul>
+        {{else}}
+            <i>loading...</i>
+        {{/if}}
     </div>
     {{/if}}
 </template>

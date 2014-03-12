@@ -1,3 +1,7 @@
+AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
+
+isServerSearch = (rule) -> _.isString(rule.collection)
+
 class @AutoComplete
 
   @KEYS: [
@@ -13,32 +17,50 @@ class @AutoComplete
     @position = settings.position || "bottom"
 
     @rules = settings.rules
+
     # Expressions compiled for the range from the last word break to the current cursor position
     @expressions = (new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$') for rule in @rules)
 
     @matched = -1
+    @loaded = true
 
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
     @filterDep = new Deps.Dependency
+    @loadingDep = new Deps.Dependency
     
     # autosubscribe to the record set published by the server based on the filter
-    self = @
-    Deps.autorun ->
-      if (filter = self.getFilter()) and (rule = self.getRule())
-        if typeof rule.collection is "string"  # subscribe only for server-side collections
-          # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
-          if rule.autocompleteRecordset  # user-managed publication/subscription
-            Meteor.subscribe(rule.autocompleteRecordset, rule.collection, rule.field, filter, self.limit, rule.preferStartWithFilter)
-          else  # we provide our own slower but functional out-of-the-box publication
-            Meteor.subscribe("meteor-autocomplete-recordset", rule.collection, rule.field, filter, self.limit, rule.preferStartWithFilter)
+    # This will tear down server subscriptions when they are no longer being used.
+    @sub = null
+    @comp = Deps.autorun =>
+      # Stop any existing sub immediately, don't wait
+      @sub?.stop()
+
+      return unless (rule = @matchedRule()) and (filter = @getFilter()) isnt null
+
+      # subscribe only for server-side collections
+      unless isServerSearch(rule)
+        @setLoaded(true) # Immediately loaded
+        return
+
+      # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
+      @setLoaded(false)
+      @sub = Meteor.subscribe("autocomplete-recordset",
+        rule.collection, rule.field, filter, @limit, rule.matchAll, => @setLoaded(true))
 
     Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
-  # reactive getters and setters for @filter and the currently matched rule
-  getRule: -> if @ruleMatched() then @rules[@matched] else null
+  teardown: ->
+    # Stop the reactive computation we started for this autocomplete instance
+    @comp.stop()
+    # console.log "cleaned up the computation"
 
-  setRuleMatched: (i) ->
+  # reactive getters and setters for @filter and the currently matched rule
+  matchedRule: ->
+    @ruleDep.depend()
+    if @matched >= 0 then @rules[@matched] else null
+
+  setMatchedRule: (i) ->
     @matched = i
     @ruleDep.changed()
 
@@ -51,7 +73,17 @@ class @AutoComplete
     @filterDep.changed()
     return @filter
 
+  isLoaded: ->
+    @loadingDep.depend()
+    return @loaded
+
+  setLoaded: (val) ->
+    return if val is @loaded # Don't cause redraws unnecessarily
+    @loaded = val
+    @loadingDep.changed()
+
   onKeyUp: (e) ->
+    return unless @$element # Don't try to do this while loading
     startpos = @$element.getCursorPosition() # TODO: this is incorrect on autofocus
     val = @getText().substring(0, startpos)
 
@@ -67,12 +99,12 @@ class @AutoComplete
 
       # matching -> not matching
       if not matches and @matched is i
-        @setRuleMatched(-1)
+        @setMatchedRule(-1)
         breakLoop = true
 
       # not matching -> matching
       if matches and @matched is -1
-        @setRuleMatched(i)
+        @setMatchedRule(i)
         breakLoop = true
 
       # Did filter change?
@@ -120,7 +152,9 @@ class @AutoComplete
     return false unless docId # Don't select if nothing matched
 
     rule = @rules[@matched]
-    @replace rule.collection.findOne(docId)[rule.field]
+    collection = if isServerSearch(rule) then AutoCompleteRecords else rule.collection
+
+    @replace collection.findOne(docId)[rule.field]
     @hideList()
     return true
 
@@ -160,7 +194,9 @@ class @AutoComplete
     @setText finalFight
     @$element.setCursorPosition val.length + 1
 
-  hideList: -> @setRuleMatched(-1)
+  hideList: ->
+    @setMatchedRule(-1)
+    @setFilter(null)
 
   getText: ->
     return @$element.val() || @$element.text()
@@ -172,11 +208,8 @@ class @AutoComplete
       @$element.html(text)
 
   ###
-    Reactive/rendering functions
+    Rendering functions
   ###
-  ruleMatched: ->
-    @ruleDep.depend()
-    return @matched >= 0
 
   filteredList: ->
     # @ruleDep.depend() # optional as long as we use filterDep, because list will always get re-rendered
@@ -185,41 +218,26 @@ class @AutoComplete
 
     rule = @rules[@matched]
 
-    fieldspec = {}
-    fieldspec[rule.field] = 1
-    collection = if typeof rule.collection is "string" then window[rule.collection] else rule.collection
-
     selector = {}
-    if not rule.preferStartWithFilter  # easy case, suboptimal user experience
+    sortspec = {}
+    sortspec[rule.field] = 1
+
+    # if server collection, the server has already done the filtering work
+    return AutoCompleteRecords.find(selector,
+      {sort: sortspec, limit: @limit }) if isServerSearch(rule)
+
+    # Otherwise, search on client
+    unless rule.matchAll
+      selector[rule.field] =
+        $regex: "^" + @filter
+        $options: "i"
+    else
       selector[rule.field] =
         $regex: @filter
         $options: 'i'
-      return collection.find(selector, { sort: fieldspec, limit: @limit })
 
-    # For the best user experience, fields startig with @filter should be returned first.
-    # The server does that, but preserving the order while publishing the filtered
-    # recordset down the wire is impossible - https://github.com/meteor/meteor/issues/821
-    # And we can't sort by a field added via `transform` either, thanks to @glasser - https://github.com/meteor/meteor/issues/1852
-    # Therefore, we have to replicate the computation on the client.
-    selector[rule.field] =
-      $regex: "^" + @filter
-      $options: "i"
-
-    resultsStart = collection.find(selector, { sort: fieldspec, limit: @limit })
-    found = resultsStart.count()
-    return resultsStart if found >= @limit  # found can't possibly be > limit, but better be paranoid
-
-    # Not all results started with @filter, so return the ones that don't, after those that do
-    alreadyFound = resultsStart.map (record) -> record._id
-    resultsStart.rewind()
-    selector[rule.field].$regex = @filter
-    selector._id = { $nin: alreadyFound }
-    resultsRest = collection.find(
-      selector,
-      { sort: fieldspec, limit: @limit - found }
-    )
-    return resultsStart.fetch().concat(resultsRest.fetch())
-
+    return rule.collection.find(selector,
+      { sort: sortspec, limit: @limit })
 
   # This doesn't need to be reactive because list already changes reactively
   # and will cause all of the items to re-render anyway

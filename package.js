@@ -4,8 +4,8 @@ Package.describe({
 
 Package.on_use(function (api) {
   api.use(['handlebars', 'templating'], 'client');
-  api.use(['coffeescript'], ['client', 'server']);
   api.use(['jquery'], 'client');
+  api.use(['coffeescript', 'underscore']); // both
 
   // Required by caretposition.js right now
   api.use('jquery-migrate');
@@ -20,6 +20,6 @@ Package.on_use(function (api) {
   ], 'client');
   
   api.add_files([
-    'autocomplete-server.coffee',
+    'autocomplete-server.coffee'
   ], 'server');
 });

@@ -64,6 +64,7 @@ Template.foo.settings = function() {
      {
        token: '!',
        collection: Dataset,
+       matchAll: true,
        field: "_id",
        template: Template.dataPiece
      }
@@ -76,9 +77,8 @@ Template.foo.settings = function() {
 - `limit`: Controls how big the autocomplete menu should get.
 - `rules`: An array of matching rules for the autocomplete widget, which will be checked in order
 - `token`: What character should trigger this rule
-- `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a String for remote collections.
-- `autocompleteRecordSet`: `null` (default) to use out-of-the-box (but slower) server-side code to search the collection for matches. To speed things up, create a publication in your server code (modeled after [`autocomplete-server.coffee`](autocomplete-server.coffee)) and set `autocompleteRecordSet` to its name. Having indexes on relevant fields, or otherwise [searching efficiently for text](http://docs.mongodb.org/manual/tutorial/search-for-text/) will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match.
-- `preferStartWithFilter`: `false` (default) to return any fields that contain the filter text anywhere within. Set to `true` to prioritize records where the field *starts with* the filter. For example, if `true`, a search for 'ba' will return 'bar' and 'baz' before 'abacus', and might be somewhat slower. Otherwise, the order would be 'abacus', 'bar', 'baz'.
+- `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
+- `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
 - `field`: The field of the collection that the rule will match against
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 

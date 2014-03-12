@@ -19,6 +19,9 @@ Meteor.startup(function () {
       }
     }
   }
+
+  // Create an index on the name field of BigCollection
+  BigCollection._ensureIndex({name: 1});
 });
 
 // don't publish anything - the out-of-the-box server code will take care of that

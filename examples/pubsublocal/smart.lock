@@ -1,0 +1,20 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "autocomplete": {
+        "path": "../.."
+      }
+    },
+    "packages": {
+      "autocomplete": {
+        "path": "../.."
+      },
+      "jquery-migrate": {
+        "git": "https://github.com/canadaduane/meteor-jquery-migrate.git",
+        "tag": "v2.0.0",
+        "commit": "636819c9de59f66410e148867b229869bb045cea"
+      }
+    }
+  }
+}
