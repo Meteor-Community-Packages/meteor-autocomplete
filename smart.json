@@ -3,7 +3,7 @@
     "description": "Text input autocomplete using Meteor collections",
     "homepage": "https://github.com/mizzao/meteor-autocomplete",
     "author": "Andrew Mao  (https://github.com/mizzao/)",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "git": "https://github.com/mizzao/meteor-autocomplete.git",
     "packages": {
       "jquery-migrate": ""

@@ -21,6 +21,8 @@ Features:
 
 Meteor's client-side data availability makes this dynamic, full-fledged autocomplete widget possible. Use it in chat rooms, comments, other messaging systems, or whatever strikes your fancy.
 
+Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
+
 ## Usage
 
 Use Meteorite to install the package:
@@ -64,6 +66,7 @@ Template.foo.settings = function() {
      {
        token: '!',
        collection: Dataset,
+       options: '',
        matchAll: true,
        field: "_id",
        template: Template.dataPiece
@@ -78,6 +81,7 @@ Template.foo.settings = function() {
 - `rules`: An array of matching rules for the autocomplete widget, which will be checked in order
 - `token`: What character should trigger this rule
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
+- `options`: `'i'` (default) to specify the regex matching options. Both case-sensitive matches and string start anchors are needed to take advantage of server indices (see below.)
 - `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
 - `field`: The field of the collection that the rule will match against
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.

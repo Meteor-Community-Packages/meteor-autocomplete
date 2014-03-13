@@ -3,6 +3,10 @@
 </head>
 
 <body>
+    <a href="https://github.com/mizzao/meteor-autocomplete">
+        <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png" alt="Fork me on GitHub">
+    </a>
+
   {{> body}}
 </body>
 
@@ -11,7 +15,7 @@
       <h2>Server-side pub/sub autocomplete</h2>
       <p>The server contains 160,000 records - all the 4-letter words that can be typed using the letters 'a' through 't'</p>
       <p>That is, from 'aaaa' to 'tttt'. Letters in the 'uvwxyz' set will produce an autocomplete miss.</p>
-      <p>The trigger character is '@'. Limit was set to 30 to emphasize matches outside strings <em>starting</em> with the filter.</p>
+      <p>The trigger character is '@'. Matches start from the beginning of the string and are case sensitive to take advantage of a server index.</p>
 
       <h2>Client-only autocomplete</h2>
       <p>There's also a client-only collection. Type '!' then some fruit names.</p>

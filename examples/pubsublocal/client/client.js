@@ -13,15 +13,16 @@ Template.body.settings = {
       // string means a server-side collection; otherwise, assume a client-side collection
       collection: 'BigCollection',
       field: 'name',
-      // set to true to search anywhere in the field, which cannot use an index.
+      options: '', // Use case-sensitive match to take advantage of server index.
       template: Template.serverCollectionPill
     },
     {
       token: '!',
       collection: Fruits,  // Meteor.Collection object means client-side collection
       field: 'type',
-      template: Template.clientCollectionPill,
-      matchAll: true  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
+      // set to true to search anywhere in the field, which cannot use an index.
+      matchAll: true,  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
+      template: Template.clientCollectionPill
     }
   ]
 };

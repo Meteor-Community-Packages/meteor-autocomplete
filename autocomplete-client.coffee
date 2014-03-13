@@ -46,7 +46,7 @@ class @AutoComplete
       # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
       @setLoaded(false)
       @sub = Meteor.subscribe("autocomplete-recordset",
-        rule.collection, rule.field, filter, @limit, rule.matchAll, => @setLoaded(true))
+        rule.collection, rule.field, filter, @limit, rule.options, rule.matchAll, => @setLoaded(true))
 
     Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
@@ -218,23 +218,25 @@ class @AutoComplete
 
     rule = @rules[@matched]
 
-    selector = {}
     sortspec = {}
     sortspec[rule.field] = 1
 
     # if server collection, the server has already done the filtering work
-    return AutoCompleteRecords.find(selector,
+    return AutoCompleteRecords.find({},
       {sort: sortspec, limit: @limit }) if isServerSearch(rule)
+
+    selector = {}
+    options = rule.options || 'i' # default is case insensitive search
 
     # Otherwise, search on client
     unless rule.matchAll
       selector[rule.field] =
         $regex: "^" + @filter
-        $options: "i"
+        $options: options
     else
       selector[rule.field] =
         $regex: @filter
-        $options: 'i'
+        $options: options
 
     return rule.collection.find(selector,
       { sort: sortspec, limit: @limit })

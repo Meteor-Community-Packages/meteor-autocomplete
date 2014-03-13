@@ -13,6 +13,7 @@
 <template name="_autocompleteContainer">
     {{#if shown}}
     <div class='-autocomplete-container' style='position: absolute;'>
+        {{#isolate}} {{! css positioning is calculated only once, we don't want to lose it}}
         {{#if isLoaded}}
         <ul class='-autocomplete-list'>
             {{! Because the computation of items is itself reactive (not just the cursor)
@@ -28,6 +29,7 @@
         {{else}}
             <i>loading...</i>
         {{/if}}
+        {{/isolate}}
     </div>
     {{/if}}
 </template>

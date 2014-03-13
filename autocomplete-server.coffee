@@ -47,26 +47,29 @@
   - @mizzao
 ###
 
-Meteor.publish 'autocomplete-recordset', (collName, field, filter, limit, matchAll) ->
-  sub = this
+Meteor.publish 'autocomplete-recordset', (collName, field, filter, limit, options, matchAll) ->
   # 'Autocompleting <%s> in <%s>.<%s> up to <%s>', filter, collection, field, limit
+  collection = global[collName]
+  unless collection
+    throw new Error(collName + " is not defined on the global namespace of the server.")
+
+  sub = this
 
   # guard against client-side DOS: hard limit to 50
   limit = Math.abs(limit)
   limit = 50 if limit > 50
 
-  collection = global[collName]
-  unless collection
-    throw new Error(collName + " is not defined on the global namespace of the server.")
+  options = options || 'i'
 
   selector = {}
   sortspec = {}
 
   if filter
+    # TODO: this logic matches that on the client; we can probably pull it into a common file
     unless matchAll
-      selector[field] = { $regex: '^' + filter, $options: 'i' }
+      selector[field] = { $regex: '^' + filter, $options: options }
     else
-      selector[field] = { $regex: filter, $options: 'i' }
+      selector[field] = { $regex: filter, $options: options }
 
     # Only sort if there is a filter, for performance reasons
     sortspec[field] = 1
