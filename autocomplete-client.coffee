@@ -2,6 +2,25 @@ AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
 
 isServerSearch = (rule) -> _.isString(rule.collection)
 
+getFindParams = (rule, filter, limit) ->
+  selector = {}
+  options = { limit: limit }
+
+  # Match anything, no sort, limit X
+  return [ selector, options ] unless filter
+
+  sortspec = {}
+  sortspec[rule.field] = 1
+  # Only sort if there is a filter, for faster performance on a match of anything
+  options.sort = sortspec
+
+  selector[rule.field] = {
+    $regex: if rule.matchAll then filter else "^" + filter
+    # default is case insensitive search - empty string is not the same as undefined!
+    $options: if (typeof rule.options is 'undefined') then 'i' else rule.options
+  }
+  return [ selector, options ]
+
 class @AutoComplete
 
   @KEYS: [
@@ -43,10 +62,12 @@ class @AutoComplete
         @setLoaded(true) # Immediately loaded
         return
 
+      [ selector, options ] = getFindParams(rule, filter, @limit)
+
       # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
       @setLoaded(false)
       @sub = Meteor.subscribe("autocomplete-recordset",
-        rule.collection, rule.field, filter, @limit, rule.options, rule.matchAll, => @setLoaded(true))
+        rule.collection, selector, options, => @setLoaded(true))
 
     Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
@@ -218,28 +239,13 @@ class @AutoComplete
 
     rule = @rules[@matched]
 
-    sortspec = {}
-    sortspec[rule.field] = 1
+    [ selector, options ] = getFindParams(rule, @filter, @limit)
 
     # if server collection, the server has already done the filtering work
-    return AutoCompleteRecords.find({},
-      {sort: sortspec, limit: @limit }) if isServerSearch(rule)
-
-    selector = {}
-    options = rule.options || 'i' # default is case insensitive search
+    return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
 
     # Otherwise, search on client
-    unless rule.matchAll
-      selector[rule.field] =
-        $regex: "^" + @filter
-        $options: options
-    else
-      selector[rule.field] =
-        $regex: @filter
-        $options: options
-
-    return rule.collection.find(selector,
-      { sort: sortspec, limit: @limit })
+    return rule.collection.find(selector, options)
 
   # This doesn't need to be reactive because list already changes reactively
   # and will cause all of the items to re-render anyway

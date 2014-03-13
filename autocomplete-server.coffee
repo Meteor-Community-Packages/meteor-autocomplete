@@ -47,7 +47,7 @@
   - @mizzao
 ###
 
-Meteor.publish 'autocomplete-recordset', (collName, field, filter, limit, options, matchAll) ->
+Meteor.publish 'autocomplete-recordset', (collName, selector, options) ->
   # 'Autocompleting <%s> in <%s>.<%s> up to <%s>', filter, collection, field, limit
   collection = global[collName]
   unless collection
@@ -56,29 +56,10 @@ Meteor.publish 'autocomplete-recordset', (collName, field, filter, limit, option
   sub = this
 
   # guard against client-side DOS: hard limit to 50
-  limit = Math.abs(limit)
-  limit = 50 if limit > 50
+  options.limit = Math.min(50, Math.abs(options.limit)) if options.limit
 
-  options = options || 'i'
-
-  selector = {}
-  sortspec = {}
-
-  if filter
-    # TODO: this logic matches that on the client; we can probably pull it into a common file
-    unless matchAll
-      selector[field] = { $regex: '^' + filter, $options: options }
-    else
-      selector[field] = { $regex: filter, $options: options }
-
-    # Only sort if there is a filter, for performance reasons
-    sortspec[field] = 1
-
-  #  Push this into our own collection on the client so they don't interfere with other publications of the named collection.
-  handle = collection.find(selector, {
-    sort: sortspec
-    limit: limit
-  }).observeChanges
+  # Push this into our own collection on the client so they don't interfere with other publications of the named collection.
+  handle = collection.find(selector, options).observeChanges
     added: (id, fields) ->
       sub.added("autocompleteRecords", id, fields)
     changed: (id, fields) ->
