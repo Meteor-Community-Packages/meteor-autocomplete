@@ -1,6 +1,6 @@
-## vNEXT
+## v0.2.0
 
-* Added server-side (pub/sub) autocompletion (#6 - @dandv)
+* Added server-side (pub/sub) autocompletion (#6) - many thanks to @dandv; see #17 for implementation discussion.
 
 ## v0.1.1
 
