@@ -177,7 +177,7 @@ class @AutoComplete
 
     doc = collection.findOne(docId)
     @replace doc[rule.field]
-    rule?.callback(doc) # Notify that the item has been selected
+    rule.callback?(doc) # Notify that the item has been selected
     @hideList()
     return true
 
@@ -235,13 +235,12 @@ class @AutoComplete
   ###
 
   filteredList: ->
-    # @ruleDep.depend() # optional as long as we use filterDep, because list will always get re-rendered
-    @filterDep.depend()
+    # @ruleDep.depend() # optional as long as we use depend on filter, because list will always get re-rendered
+    filter = @getFilter() # Reactively depend on the filter
     return null if @matched is -1
 
     rule = @rules[@matched]
-
-    [ selector, options ] = getFindParams(rule, @filter, @limit)
+    [ selector, options ] = getFindParams(rule, filter, @limit)
 
     # if server collection, the server has already done the filtering work
     return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
