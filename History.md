@@ -1,3 +1,7 @@
+## vNEXT
+
+* Provided an option for callbacks when an item is selected and inserted.
+
 ## v0.2.1
 
 * Fixed a bug with CSS positioning of the autocomplete popup.

@@ -85,6 +85,7 @@ Template.foo.settings = function() {
 - `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
 - `field`: The field of the collection that the rule will match against
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+- `callback`: An optional function which is called with one argument, when an item is selected.
 
 Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`.
 

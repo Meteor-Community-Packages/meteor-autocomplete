@@ -14,7 +14,8 @@ Template.body.settings = {
       collection: 'BigCollection',
       field: 'name',
       options: '', // Use case-sensitive match to take advantage of server index.
-      template: Template.serverCollectionPill
+      template: Template.serverCollectionPill,
+      callback: function(doc) { console.log(doc); }
     },
     {
       token: '!',

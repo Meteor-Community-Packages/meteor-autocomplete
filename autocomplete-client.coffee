@@ -175,7 +175,9 @@ class @AutoComplete
     rule = @rules[@matched]
     collection = if isServerSearch(rule) then AutoCompleteRecords else rule.collection
 
-    @replace collection.findOne(docId)[rule.field]
+    doc = collection.findOne(docId)
+    @replace doc[rule.field]
+    rule?.callback(doc) # Notify that the item has been selected
     @hideList()
     return true
 
