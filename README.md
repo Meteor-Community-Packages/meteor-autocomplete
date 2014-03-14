@@ -3,6 +3,8 @@ meteor-autocomplete
 
 Prefix auto-completion using documents and fields in client- or server-side Meteor collections.
 
+Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
+
 ## What's this do?
 
 Auto-completes typing in text `input`s or `textarea`s from different local or remote Meteor collections when triggered by certain symbols. You've probably seen this when referring to users or issues in a GitHub conversation. For example, you may want to ping a user:
@@ -20,8 +22,6 @@ Features:
  - Mouse or keyboard interaction with autocomplete menu
 
 Meteor's client-side data availability makes this dynamic, full-fledged autocomplete widget possible. Use it in chat rooms, comments, other messaging systems, or whatever strikes your fancy.
-
-Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
 
 ## Usage
 
@@ -87,7 +87,10 @@ Template.foo.settings = function() {
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 - `callback`: An optional function which is called with one argument, when an item is selected.
 
-Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`.
+Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`. For example settings see one of the following:
+
+- https://github.com/mizzao/meteor-autocomplete/blob/master/examples/pubsublocal/client/client.js (from the example app above)
+- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee#L146 (an example used in a chatroom)
 
 **Simple autocompletion**: If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
 
