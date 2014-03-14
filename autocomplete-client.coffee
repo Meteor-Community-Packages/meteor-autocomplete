@@ -160,9 +160,7 @@ class @AutoComplete
       @hideList()
     , 500
 
-  onItemClick: (doc, e) =>
-    @replace doc[@rules[@matched].field]
-    @hideList()
+  onItemClick: (doc, e) => @processSelection(doc, @rules[@matched])
 
   onItemHover: (doc, e) ->
     Session.set("-autocomplete-id", doc._id)
@@ -176,10 +174,15 @@ class @AutoComplete
     collection = if isServerSearch(rule) then AutoCompleteRecords else rule.collection
 
     doc = collection.findOne(docId)
+    @processSelection(doc, rule)
+    return true
+
+  processSelection: (doc, rule) ->
     @replace doc[rule.field]
+    # TODO: behave better if the callback throws an error
     rule.callback?(doc) # Notify that the item has been selected
     @hideList()
-    return true
+    return
 
   # Select next item in list
   next: ->
