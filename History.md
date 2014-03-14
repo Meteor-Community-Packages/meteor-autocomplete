@@ -1,4 +1,4 @@
-## vNEXT
+## v0.2.2
 
 * Provided an option for callbacks when an item is selected and inserted.
 

@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "Symbol-triggered autocompletion using Meteor collections"
+  summary: "Autocomplete using Meteor collections on client and server"
 });
 
 Package.on_use(function (api) {
