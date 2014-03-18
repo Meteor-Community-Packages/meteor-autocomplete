@@ -21,6 +21,10 @@ getFindParams = (rule, filter, limit) ->
   }
   return [ selector, options ]
 
+getField = (obj, str) ->
+  obj = obj[key] for key in str.split(".")
+  return obj
+
 class @AutoComplete
 
   @KEYS: [
@@ -178,19 +182,11 @@ class @AutoComplete
     return true
 
   processSelection: (doc, rule) ->
-    @replace @objAttr2arrayAttr(doc,rule.field)
+    @replace getField(doc, rule.field)
     # TODO: behave better if the callback throws an error
     rule.callback?(doc) # Notify that the item has been selected
     @hideList()
     return
-
-  objAttr2arrayAttr: (obj, str) ->
-    str = str.split(".")
-    i = 0
-    while i < str.length
-      obj = obj[str[i]]
-      i++
-    obj
 
   # Select next item in list
   next: ->

@@ -1,3 +1,7 @@
+## v0.2.3
+
+* Support nested values for `field`, i.e. `'profile.foo'`. (#19)
+
 ## v0.2.2
 
 * Provided an option for callbacks when an item is selected and inserted (#18).

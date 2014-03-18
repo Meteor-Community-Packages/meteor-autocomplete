@@ -83,7 +83,7 @@ Template.foo.settings = function() {
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `options`: `'i'` (default) to specify the regex matching options. Both case-sensitive matches and string start anchors are needed to take advantage of server indices (see below.)
 - `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
-- `field`: The field of the collection that the rule will match against
+- `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
 - `callback`: An optional function which is called with one argument, when an item is selected.
 
@@ -151,5 +151,6 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 - Alexey Komissarouk ([AlexeyMK](https://github.com/AlexeyMK))
 - Tessa Lau ([tlau](https://github.com/tlau))
 - Dan Dascalescu ([dandv](https://github.com/dandv))
+- Pascal Richier ([pascoual](https://github.com/pascoual))
 
 If you found this package useful, I gratefully accept donations at [Gittip](https://www.gittip.com/mizzao/).
