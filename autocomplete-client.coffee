@@ -3,7 +3,7 @@ AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
 isServerSearch = (rule) -> _.isString(rule.collection)
 
 getFindParams = (rule, filter, limit) ->
-  selector = {}
+  selector = rule.selector || {}
   options = { limit: limit }
 
   # Match anything, no sort, limit X

@@ -59,6 +59,7 @@ Template.foo.settings = function() {
    rules: [
      {
        token: '@',
+       selector: {type: "autocomplete"},
        collection: Meteor.users,
        field: "username",
        template: Template.userPill
