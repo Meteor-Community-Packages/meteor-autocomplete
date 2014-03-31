@@ -33,4 +33,5 @@ Package.on_test(function(api) {
   api.use('tinytest');
 
   api.add_files('tests/param_tests.coffee', 'client');
+  api.add_files('tests/security_tests.coffee');
 });

@@ -47,11 +47,16 @@
   - @mizzao
 ###
 
-Meteor.publish 'autocomplete-recordset', (collName, selector, options) ->
-  # 'Autocompleting <%s> in <%s>.<%s> up to <%s>', filter, collection, field, limit
+Meteor.publish 'autocomplete-recordset', (selector, options, collName) ->
   collection = global[collName]
   unless collection
     throw new Error(collName + " is not defined on the global namespace of the server.")
+
+  # This is a semi-documented Meteor feature:
+  # https://github.com/meteor/meteor/blob/devel/packages/mongo-livedata/collection.js
+  unless collection._isInsecure()
+    Meteor._debug(collName + " is secure; Cowardly refusing a potential security risk by returning data. Please write your own publish function.")
+    return [] # We need this for the subscription to be marked ready
 
   sub = this
 

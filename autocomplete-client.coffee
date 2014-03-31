@@ -72,8 +72,9 @@ class @AutoComplete
 
       # console.debug 'Subscribing to <%s> in <%s>.<%s>', filter, rule.collection, rule.field
       @setLoaded(false)
-      @sub = Meteor.subscribe("autocomplete-recordset",
-        rule.collection, selector, options, => @setLoaded(true))
+      subName = rule.subscription || "autocomplete-recordset"
+      @sub = Meteor.subscribe(subName,
+        selector, options, rule.collection, => @setLoaded(true))
 
     Session.set("-autocomplete-id", null); # Use this for Session.equals()
 
@@ -278,4 +279,5 @@ class @AutoComplete
       }
 
 AutocompleteTest =
+  records: AutoCompleteRecords
   getFindParams: getFindParams

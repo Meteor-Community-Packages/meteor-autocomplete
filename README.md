@@ -87,21 +87,35 @@ Template.foo.settings = function() {
 
 - `token`: What character should trigger this rule
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
+- `subscription`: A custom subscription for server-side search; see below.
 - `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
-- `options`: `'i'` (default) to specify the regex matching options. Both case-sensitive matches and string start anchors are needed to take advantage of server indices (see below.)
-- `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
+- `options`: `'i'` (default) to specify the regex matching options.
+- `matchAll`: `false` (default) to match only fields starting with the matched string. (see below)
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
-- `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+- `template`: The template that should be used to render each list item.
 - `callback`: (optional) A function which is called with one argument, when an item is selected.
 
-Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`. For example settings see one of the following:
+##### Regex Specification and Options
 
-- https://github.com/mizzao/meteor-autocomplete/blob/master/examples/pubsublocal/client/client.js (from the example app above)
-- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee#L146 (an example used in a chatroom)
+Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Hence, when using case-sensitive matches and string start anchors (i.e. `matchAll: false`) searches can take advantage of server indices in Mongo.
 
-**Simple autocompletion**: If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
+This behavior is demonstrated in the example app.
 
-An autocomplete template is just a normal Meteor template that is passed in the matched document. For example, if you were matching on `Meteor.users` and you just wanted to display the username, you can do something very simple, and display the same field:
+##### Simple Autocompletion
+
+If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
+
+##### Server-side Autocompletion and Text Search Engines
+
+For security purposes, a default implementation of server-side autocomplete is only provided for insecure collections, to be used while prototyping. In all other applications, write your own publish function with the same arguments as in the [autocomplete-recordset](autocomplete-server.coffee) publication and secure it properly, given that clients can subscribe to this function in ways other than your client code intends. Make sure to push documents to the `AutoCompleteRecords` client-side collection.
+
+Use of a custom publish function also allows you to use full-text search services outside of Meteor, such as [ElasticSearch](http://www.elasticsearch.org/).
+
+##### Autocomplete Templates
+
+An autocomplete template is just a normal Meteor template that is passed in the matched document. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
+
+Records that match the filter text typed after the token render a list of the `template` sorted in ascending order by `field`. For example, if you were matching on `Meteor.users` and you just wanted to display the username, you can do something very simple, and display the same field:
 
 ```
 <template name="userPill">
@@ -131,6 +145,13 @@ Template.userPill.labelClass = function() {
 ```
 
 This (using normal Bootstrap classes) will cause the user to show up in orange for him/herself, in green for other users that are online, and in grey otherwise. See [CrowdMapper's templates](https://github.com/mizzao/CrowdMapper/blob/master/client/views/common.html) for other interesting things you may want to do.
+
+##### Examples
+
+For example settings see one of the following:
+
+- https://github.com/mizzao/meteor-autocomplete/blob/master/examples/pubsublocal/client/client.js (from the example app above)
+- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee#L146 (an example used in a chatroom)
 
 ### Future Work (a.k.a. send pull requests)
 
