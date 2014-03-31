@@ -1,35 +1,37 @@
-<template name="_inputAutocomplete">
-    <input type="text" {{{attributes}}}>
+<template name="inputAutocomplete">
+    <input type="text" {{attributes}}>
     {{> _autocompleteContainer ac}}
 </template>
 
-<template name="_textareaAutocomplete">
-    <textarea {{{attributes}}}>
-        {{{text}}}
+<template name="textareaAutocomplete">
+    <textarea {{attributes}}>
+        {{> UI.contentBlock}}
     </textarea>
     {{> _autocompleteContainer ac}}
 </template>
 
 <template name="_autocompleteContainer">
     {{#if shown}}
-    <div class='-autocomplete-container' style='position: absolute;'>
-        {{#isolate}} {{! css positioning is calculated only once, we don't want to lose it}}
+    <div class='-autocomplete-container'>
         {{#if isLoaded}}
-        <ul class='-autocomplete-list'>
-            {{! Because the computation of items is itself reactive (not just the cursor)
-                it needs isolation, but must remain in this template to access the data context }}
-            {{#isolate}}
-            {{#each items}}
-            <li class="-autocomplete-item {{selected}}">
-                {{itemTemplate ..}}
-            </li>
-            {{/each}}
-            {{/isolate}}
-        </ul>
+            {{#unless empty}}
+            <ul class='-autocomplete-list'>
+                {{#each items}}
+                <li class="-autocomplete-item">
+                    {{#with itemTemplate .. }}
+                        {{#with ..}}  {{! original 'data' context to itemTemplate}}
+                            {{> ..}}  {{! return value from itemTemplate }}
+                        {{/with}}
+                    {{/with}}
+                </li>
+                {{/each}}
+            </ul>
+            {{else}}
+            (<i>no matches</i>)
+            {{/unless}}
         {{else}}
             <i>loading...</i>
         {{/if}}
-        {{/isolate}}
     </div>
     {{/if}}
 </template>

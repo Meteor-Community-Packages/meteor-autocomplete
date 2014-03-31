@@ -1,9 +1,13 @@
+## v0.3.0
+
+* Update for Meteor 0.8.0 (Blaze). **NOTE: You will need to update your app to use this version.** (#22)
+
 ## v0.2.4
 
 This is the last version of autocomplete that will support Meteor <0.8.0 (Blaze).
 
 * Add an optional `filter` field to allow additional static filters on a collection search. (#21)
-* Only insecure collections can be searched by default on the server side. If you are using the default implementation, **you will need to write your own publish function**. (#20)
+* Only insecure collections can be searched by default on the server side. **If you are using the default implementation, you will need to write your own publish function**. (#20)
 * Add automated testing infrastructure.
 
 ## v0.2.3

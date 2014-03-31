@@ -4,9 +4,7 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-preserve-inputs
 autocomplete
 coffeescript
 bootstrap
-madewith
 insecure

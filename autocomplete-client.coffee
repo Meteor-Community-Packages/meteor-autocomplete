@@ -76,8 +76,6 @@ class @AutoComplete
       @sub = Meteor.subscribe(subName,
         selector, options, rule.collection, => @setLoaded(true))
 
-    Session.set("-autocomplete-id", null); # Use this for Session.equals()
-
   teardown: ->
     # Stop the reactive computation we started for this autocomplete instance
     @comp.stop()
@@ -170,18 +168,31 @@ class @AutoComplete
   onItemClick: (doc, e) => @processSelection(doc, @rules[@matched])
 
   onItemHover: (doc, e) ->
-    Session.set("-autocomplete-id", doc._id)
+    @tmplInst.$(".-autocomplete-item").removeClass("selected")
+    $(e.target).closest(".-autocomplete-item").addClass("selected")
+
+  filteredList: ->
+    # @ruleDep.depend() # optional as long as we use depend on filter, because list will always get re-rendered
+    filter = @getFilter() # Reactively depend on the filter
+    return null if @matched is -1
+
+    rule = @rules[@matched]
+    [ selector, options ] = getFindParams(rule, filter, @limit)
+
+    Meteor.defer => @ensureSelection()
+
+    # if server collection, the server has already done the filtering work
+    return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
+
+    # Otherwise, search on client
+    return rule.collection.find(selector, options)
 
   # Replace text with currently selected item
   select: ->
-    docId = Deps.nonreactive(-> Session.get("-autocomplete-id"))
-    return false unless docId # Don't select if nothing matched
+    doc = UI.getElementData @tmplInst.find(".-autocomplete-item.selected")
+    return false unless doc # Don't select if nothing matched
 
-    rule = @rules[@matched]
-    collection = if isServerSearch(rule) then AutoCompleteRecords else rule.collection
-
-    doc = collection.findOne(docId)
-    @processSelection(doc, rule)
+    @processSelection(doc, @rules[@matched])
     return true
 
   processSelection: (doc, rule) ->
@@ -191,29 +202,16 @@ class @AutoComplete
     @hideList()
     return
 
-  # Select next item in list
-  next: ->
-    currentItem = @tmplInst.find(".-autocomplete-item.selected")
-    return unless currentItem # Don't try to iterate an empty list
+  isShowing: ->
+    showing = @matchedRule() isnt null
 
-    next = $(currentItem).next()
-    if next.length
-      nextId = Spark.getDataContext(next[0])._id
-    else # End of list or lost selection; Go back to first item
-      nextId = Spark.getDataContext(@tmplInst.find(".-autocomplete-item:first-child"))._id
-    Session.set("-autocomplete-id", nextId)
+    # Do this after the render
+    if showing
+      Meteor.defer =>
+        @positionContainer()
+        @ensureSelection()
 
-  # Select previous item in list
-  prev: ->
-    currentItem = @tmplInst.find(".-autocomplete-item.selected")
-    return unless currentItem # Don't try to iterate an empty list
-
-    prev = $(currentItem).prev()
-    if prev.length
-      prevId = Spark.getDataContext(prev[0])._id
-    else # Beginning of list or lost selection; Go to end of list
-      prevId = Spark.getDataContext(@tmplInst.find(".-autocomplete-item:last-child"))._id
-    Session.set("-autocomplete-id", prevId)
+    return showing
 
   # Replace the appropriate region
   replace: (replacement) ->
@@ -243,40 +241,60 @@ class @AutoComplete
   ###
     Rendering functions
   ###
-
-  filteredList: ->
-    # @ruleDep.depend() # optional as long as we use depend on filter, because list will always get re-rendered
-    filter = @getFilter() # Reactively depend on the filter
-    return null if @matched is -1
-
-    rule = @rules[@matched]
-    [ selector, options ] = getFindParams(rule, filter, @limit)
-
-    # if server collection, the server has already done the filtering work
-    return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
-
-    # Otherwise, search on client
-    return rule.collection.find(selector, options)
-
-  # This doesn't need to be reactive because list already changes reactively
-  # and will cause all of the items to re-render anyway
-  currentTemplate: -> @rules[@matched].template
-
-  getMenuPositioning: ->
+  positionContainer: ->
+    # First render; Pick the first item and set css whenever list gets shown
     position = @$element.position()
     offset = @$element.getCaretPosition(@position)
 
     if @position is "top"
       # Do some additional calculation to position menu from bottom
-      return {
+      pos = {
         left: position.left + offset.left
         bottom: @$element.offsetParent().height() - position.top + @$element.height() - offset.top
       }
     else
-      return {
+      pos = {
         left: position.left + offset.left
         top: position.top + offset.top
       }
+
+    @tmplInst.$(".-autocomplete-container").css(pos)
+
+  ensureSelection : ->
+    # Re-render; make sure selected item is something in the list or none if list empty
+    selectedItem = @tmplInst.$(".-autocomplete-item.selected")
+
+    unless selectedItem.length
+      # Select anything
+      @tmplInst.$(".-autocomplete-item:first-child").addClass("selected")
+
+  # Select next item in list
+  next: ->
+    currentItem = @tmplInst.$(".-autocomplete-item.selected")
+    return unless currentItem.length # Don't try to iterate an empty list
+    currentItem.removeClass("selected")
+
+    next = currentItem.next()
+    if next.length
+      next.addClass("selected")
+    else # End of list or lost selection; Go back to first item
+      @tmplInst.$(".-autocomplete-item:first-child").addClass("selected")
+
+  # Select previous item in list
+  prev: ->
+    currentItem = @tmplInst.$(".-autocomplete-item.selected")
+    return unless currentItem.length # Don't try to iterate an empty list
+    currentItem.removeClass("selected")
+
+    prev = currentItem.prev()
+    if prev.length
+      prev.addClass("selected")
+    else # Beginning of list or lost selection; Go to end of list
+      @tmplInst.$(".-autocomplete-item:last-child").addClass("selected")
+
+  # This doesn't need to be reactive because list already changes reactively
+  # and will cause all of the items to re-render anyway
+  currentTemplate: -> @rules[@matched].template
 
 AutocompleteTest =
   records: AutoCompleteRecords

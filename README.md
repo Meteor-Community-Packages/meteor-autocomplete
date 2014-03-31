@@ -31,18 +31,18 @@ Use Meteorite to install the package:
 mrt add autocomplete
 ```
 
-Add a text `input` or `textarea` to a template in one of the following ways, as a handlebars helper or block helper. Pass in any HTML parameters as the options hash of the Handlebars helper:
+Add a text `input` or `textarea` to a template in one of the following ways, as a Spacebars template or block helper. Pass in any HTML parameters as other arguments to the template:
 
 ```
 <template name="foo">
     ... stuff
-    {{inputAutocomplete settings id="msg" class="input-xlarge" placeholder="Chat..."}}
+    {{> inputAutocomplete settings=settings id="msg" class="input-xlarge" placeholder="Chat..."}}
     ... more stuff
 </template>
 
 <template name="bar">
     ... stuff
-    {{#textareaAutocomplete settings id="msg"}}
+    {{#textareaAutocomplete settings=settings id="msg"}}
         {{myStartingText}}
     {{/textareaAutocomplete}}
     ... more stuff
@@ -161,7 +161,6 @@ For example settings see one of the following:
 
 ### Known Issues
 
-- Empty list (and css shadow) renders if rule activated but no matches (a reactivity headache otherwise, requires some thought to rewrite)
 - Cursor position may be incorrect on a focus
 - Regexp only matches from beginning to cursor position in word (done in jquery-sew, could use rewrite)
 - Escape key behavior copied from jquery-sew but it's rather vacuous
