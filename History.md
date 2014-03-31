@@ -1,3 +1,8 @@
+## vNEXT
+
+* Add an optional `filter` field to allow additional static filters on a collection search.
+* Add automated testing infrastructure.
+
 ## v0.2.3
 
 * Support nested values for `field`, i.e. `'profile.foo'`. (#19)

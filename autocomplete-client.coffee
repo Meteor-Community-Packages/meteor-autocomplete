@@ -3,7 +3,9 @@ AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
 isServerSearch = (rule) -> _.isString(rule.collection)
 
 getFindParams = (rule, filter, limit) ->
-  selector = rule.selector || {}
+  # This is a different 'filter' - the selector from the settings
+  # We need to extend so that we don't copy over rule.filter
+  selector = _.extend({}, rule.filter || {})
   options = { limit: limit }
 
   # Match anything, no sort, limit X
@@ -274,3 +276,6 @@ class @AutoComplete
         left: position.left + offset.left
         top: position.top + offset.top
       }
+
+AutocompleteTest =
+  getFindParams: getFindParams

@@ -22,4 +22,15 @@ Package.on_use(function (api) {
   api.add_files([
     'autocomplete-server.coffee'
   ], 'server');
+
+  api.export('AutocompleteTest', {testOnly: true});
+});
+
+Package.on_test(function(api) {
+  api.use('autocomplete');
+
+  api.use('coffeescript');
+  api.use('tinytest');
+
+  api.add_files('tests/param_tests.coffee', 'client');
 });

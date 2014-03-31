@@ -1,4 +1,4 @@
-meteor-autocomplete
+meteor-autocomplete [![Build Status](https://travis-ci.org/mizzao/meteor-autocomplete.svg)](https://travis-ci.org/mizzao/meteor-autocomplete)
 ===================
 
 Prefix auto-completion using documents and fields in client- or server-side Meteor collections.
@@ -49,7 +49,7 @@ Add a text `input` or `textarea` to a template in one of the following ways, as 
 </template>
 ```
 
-Define a helper for the first argument like the following:
+Define a helper for the first argument, like the following example:
 
 ```javascript
 Template.foo.settings = function() {
@@ -59,7 +59,6 @@ Template.foo.settings = function() {
    rules: [
      {
        token: '@',
-       selector: {type: "autocomplete"},
        collection: Meteor.users,
        field: "username",
        template: Template.userPill
@@ -67,9 +66,10 @@ Template.foo.settings = function() {
      {
        token: '!',
        collection: Dataset,
+       field: "_id",
        options: '',
        matchAll: true,
-       field: "_id",
+       filter: { type: "autocomplete" },
        template: Template.dataPiece
      }
    ]
@@ -77,16 +77,22 @@ Template.foo.settings = function() {
 };
 ```
 
+##### Top Level Options
+
 - `position` (= `top` or `bottom`) specifies if the autocomplete menu should render above or below the cursor. Select based on the placement of your `input`/`textarea` relative to other elements on the page.
 - `limit`: Controls how big the autocomplete menu should get.
-- `rules`: An array of matching rules for the autocomplete widget, which will be checked in order
+- `rules`: An array of matching rules for the autocomplete widget, which will be checked in order.
+
+##### Rule Specific Options
+
 - `token`: What character should trigger this rule
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
+- `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
 - `options`: `'i'` (default) to specify the regex matching options. Both case-sensitive matches and string start anchors are needed to take advantage of server indices (see below.)
 - `matchAll`: `false` (default) to match only fields starting with the matched string. This means that indexes on relevant fields will help. Note that [regular expression searches](http://docs.mongodb.org/manual/reference/operator/query/regex/) can only use an index efficiently when the regular expression has an anchor for the beginning (i.e. `^`) of a string and is a case-sensitive match. Setting this field to `true` will match anywhere in the string, but will not be able to take advantage of server indices.
-- `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
+- `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `template`: The template that should be used to render each list item. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
-- `callback`: An optional function which is called with one argument, when an item is selected.
+- `callback`: (optional) A function which is called with one argument, when an item is selected.
 
 Records that match the filter text typed after the token will be passed to the `template` sorted in ascending order by `field`. For example settings see one of the following:
 
@@ -145,13 +151,10 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 - If you are not using Meteor, you may want to check out [jquery sew](https://github.com/tactivos/jquery-sew), from which this was heavily modified.
 - If you need tag autocompletion only (from one collection, and no text), try either the [x-editable smart package](https://github.com/nate-strauser/meteor-x-editable-bootstrap) with Select2 or [jquery-tokenInput](http://loopj.com/jquery-tokeninput/). Those support rendering DOM elements in the input field.
 
-### Contributors
+### Main Contributors
 
 - Andrew Mao ([mizzao](https://github.com/mizzao))
-- Patrick Coffey ([patrickocoffeyo](https://github.com/patrickocoffeyo))
-- Alexey Komissarouk ([AlexeyMK](https://github.com/AlexeyMK))
-- Tessa Lau ([tlau](https://github.com/tlau))
 - Dan Dascalescu ([dandv](https://github.com/dandv))
-- Pascal Richier ([pascoual](https://github.com/pascoual))
+- Neobii ([Neobii](https://github.com/Neobii))
 
 If you found this package useful, I gratefully accept donations at [Gittip](https://www.gittip.com/mizzao/).
