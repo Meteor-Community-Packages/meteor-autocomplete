@@ -176,6 +176,6 @@ For example settings see one of the following:
 
 - Andrew Mao ([mizzao](https://github.com/mizzao))
 - Dan Dascalescu ([dandv](https://github.com/dandv))
-- Neobii ([Neobii](https://github.com/Neobii))
+- Adam Love ([Neobii](https://github.com/Neobii))
 
 If you found this package useful, I gratefully accept donations at [Gittip](https://www.gittip.com/mizzao/).
