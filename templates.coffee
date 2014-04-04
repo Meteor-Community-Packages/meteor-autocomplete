@@ -1,8 +1,5 @@
 # Render all but the settings parameter
-attributes = ->
-  hash = _.extend {}, @
-  delete hash.settings
-  return hash
+attributes = -> _.omit(@, 'settings')
 
 Template.inputAutocomplete.attributes = attributes
 Template.textareaAutocomplete.attributes = attributes
