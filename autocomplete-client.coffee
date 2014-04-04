@@ -40,6 +40,8 @@ class @AutoComplete
   constructor: (settings) ->
     @limit = settings.limit || 5
     @position = settings.position || "bottom"
+    #replace the "current" or "full" contents of input
+    @replacing = settings.replacing || "current"
 
     @rules = settings.rules
 
@@ -196,7 +198,11 @@ class @AutoComplete
     return true
 
   processSelection: (doc, rule) ->
-    @replace getField(doc, rule.field)
+    if @replacing == "full"
+      @replaceFull getField(doc, rule.field)
+    else
+      @replace getField(doc, rule.field)
+    
     # TODO: behave better if the callback throws an error
     rule.callback?(doc) # Notify that the item has been selected
     @hideList()
@@ -224,6 +230,10 @@ class @AutoComplete
     finalFight = val + separator + posfix
     @setText finalFight
     @$element.setCursorPosition val.length + 1
+
+  replaceFull: (replacement) ->
+    @setText replacement
+    @$element.setCursorPosition replacement.length
 
   hideList: ->
     @setMatchedRule(-1)

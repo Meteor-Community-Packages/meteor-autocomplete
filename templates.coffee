@@ -1,5 +1,8 @@
 # Render all but the settings parameter
-attributes = -> _.omit(@, 'settings')
+attributes = ->
+  hash = _.extend {}, @
+  delete hash.settings
+  return hash
 
 Template.inputAutocomplete.attributes = attributes
 Template.textareaAutocomplete.attributes = attributes
@@ -47,7 +50,8 @@ Template._autocompleteContainer.shown = -> @isShowing()
 
 Template._autocompleteContainer.items = -> @filteredList()
 
-Template._autocompleteContainer.empty = -> @filteredList().count() is 0
+Template._autocompleteContainer.empty = ->
+  (if @filteredList() then @filteredList().count() is 0 else true)
 
 Template._autocompleteContainer.itemTemplate = (ac) -> ac.currentTemplate()
 
