@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.on_use(function (api) {
-  api.use(['handlebars', 'templating'], 'client');
+  api.use(['ui', 'templating'], 'client');
   api.use(['jquery'], 'client');
   api.use(['coffeescript', 'underscore']); // both
 

@@ -2,6 +2,7 @@
   "packages": {
     "autocomplete": {
       "path": "../.."
-    }  
+    },
+    "bootstrap-3": {}
   }
 }

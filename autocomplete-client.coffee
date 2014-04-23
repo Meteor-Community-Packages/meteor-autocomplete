@@ -44,7 +44,7 @@ class @AutoComplete
     @rules = settings.rules
 
     # Expressions compiled for the range from the last word break to the current cursor position
-    @expressions = (new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$') for rule in @rules)
+    @expressions = (new RegExp('(^|\\b|\\s)' + (rule.token || '') + '([\\w.]*)$') for rule in @rules)
 
     @matched = -1
     @loaded = true
@@ -177,6 +177,10 @@ class @AutoComplete
     return null if @matched is -1
 
     rule = @rules[@matched]
+    # Don't display list unless we have a token or a filter (or both)
+    # Single field: nothing displayed until something is typed
+    return null unless rule.token or filter
+
     [ selector, options ] = getFindParams(rule, filter, @limit)
 
     Meteor.defer => @ensureSelection()
@@ -187,6 +191,19 @@ class @AutoComplete
     # Otherwise, search on client
     return rule.collection.find(selector, options)
 
+  isShowing: ->
+    rule = @matchedRule()
+    # Same rules as above
+    showing = rule isnt null and (rule.token or @getFilter())
+
+    # Do this after the render
+    if showing
+      Meteor.defer =>
+        @positionContainer()
+        @ensureSelection()
+
+    return showing
+
   # Replace text with currently selected item
   select: ->
     doc = UI.getElementData @tmplInst.find(".-autocomplete-item.selected")
@@ -196,22 +213,21 @@ class @AutoComplete
     return true
 
   processSelection: (doc, rule) ->
-    @replace getField(doc, rule.field)
+    replacement = getField(doc, rule.field)
+
+    if rule.token
+      @replace(replacement, rule)
+    else
+      # Empty string or doesn't exist?
+      # Single-field replacement: replace whole field
+      @setText(replacement)
+      # Blur field so it doesn't get auto selected again
+      @$element.blur()
+
     # TODO: behave better if the callback throws an error
-    rule.callback?(doc) # Notify that the item has been selected
+    rule.callback?(doc, @$element) # Notify that the item has been selected
     @hideList()
     return
-
-  isShowing: ->
-    showing = @matchedRule() isnt null
-
-    # Do this after the render
-    if showing
-      Meteor.defer =>
-        @positionContainer()
-        @ensureSelection()
-
-    return showing
 
   # Replace the appropriate region
   replace: (replacement) ->
@@ -224,6 +240,7 @@ class @AutoComplete
     finalFight = val + separator + posfix
     @setText finalFight
     @$element.setCursorPosition val.length + 1
+    return
 
   hideList: ->
     @setMatchedRule(-1)

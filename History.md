@@ -1,3 +1,8 @@
+## v0.4.0
+
+* Revamped the behavior of token-less autocompletion. (See #4, #27, and #33)
+* The selection callback now passes the input element as the second argument. (#31)
+
 ## v0.3.0
 
 * Update for Meteor 0.8.0 (Blaze). **NOTE: You will need to update your app to use this version.** (#22)

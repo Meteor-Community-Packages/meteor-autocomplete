@@ -5,6 +5,8 @@ Prefix auto-completion using documents and fields in client- or server-side Mete
 
 Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
 
+Help keep your favorite Meteor packages alive! If you depend on this package in your app and find it useful, consider a donation at [Gittip](https://www.gittip.com/mizzao/) for me (or other Meteor package maintainers).
+
 ## What's this do?
 
 Auto-completes typing in text `input`s or `textarea`s from different local or remote Meteor collections when triggered by certain symbols. You've probably seen this when referring to users or issues in a GitHub conversation. For example, you may want to ping a user:
@@ -85,7 +87,7 @@ Template.foo.settings = function() {
 
 ##### Rule Specific Options
 
-- `token`: What character should trigger this rule
+- `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
 - `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
@@ -93,7 +95,7 @@ Template.foo.settings = function() {
 - `matchAll`: `false` (default) to match only fields starting with the matched string. (see below)
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `template`: The template that should be used to render each list item.
-- `callback`: (optional) A function which is called with one argument, when an item is selected.
+- `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
 
 ##### Regex Specification and Options
 
@@ -101,9 +103,11 @@ Note that [regular expression searches](http://docs.mongodb.org/manual/reference
 
 This behavior is demonstrated in the example app.
 
-##### Simple Autocompletion
+##### Whole-field (Tokenless) Autocompletion
 
-If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object where `token` is the empty string: `''`. This is a little janky, but it works - you can offer any suggestions for improvement [here](https://github.com/mizzao/meteor-autocomplete/issues/4).
+If you only need to autocomplete over a single collection and want to match the entire field, specify a `rules` array with a single object and omit the `token` argument. The behavior for this is a little different than with tokens; see the [demo](http://autocomplete.meteor.com).
+
+Mixing tokens with tokenless autocompletion is unsupported and will probably result in unexpected behavior.
 
 ##### Server-side Autocompletion and Text Search Engines
 
@@ -177,4 +181,3 @@ For example settings see one of the following:
 - Dan Dascalescu ([dandv](https://github.com/dandv))
 - Adam Love ([Neobii](https://github.com/Neobii))
 
-If you found this package useful, I gratefully accept donations at [Gittip](https://www.gittip.com/mizzao/).
