@@ -161,8 +161,9 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 
 For example settings see one of the following:
 
-- https://github.com/mizzao/meteor-autocomplete/blob/master/examples/pubsublocal/client/client.js (from the example app above)
-- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee (an example used in a chatroom)
+- [Multi-field example](examples/pubsublocal/client/client.js) (from the app above)
+- [Single-field example](examples/pubsublocal/client/single.js) (also from the app above)
+- [Autocompleting chatroom example](https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee)
 
 ### Future Work (a.k.a. send pull requests)
 
