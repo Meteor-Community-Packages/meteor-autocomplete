@@ -16,11 +16,16 @@ getFindParams = (rule, filter, limit) ->
   # Only sort if there is a filter, for faster performance on a match of anything
   options.sort = sortspec
 
-  selector[rule.field] = {
-    $regex: if rule.matchAll then filter else "^" + filter
-    # default is case insensitive search - empty string is not the same as undefined!
-    $options: if (typeof rule.options is 'undefined') then 'i' else rule.options
-  }
+  if _.isFunction(rule.selector)
+    # Custom selector
+    _.extend(selector, rule.selector(filter))
+  else
+    selector[rule.field] = {
+      $regex: if rule.matchAll then filter else "^" + filter
+      # default is case insensitive search - empty string is not the same as undefined!
+      $options: if (typeof rule.options is 'undefined') then 'i' else rule.options
+    }
+
   return [ selector, options ]
 
 getField = (obj, str) ->

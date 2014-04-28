@@ -74,4 +74,14 @@ Tinytest.add "autocomplete - params - incorporate filter", (test) ->
   test.equal sel.type, "autocomplete"
   test.isFalse rule.filter.blah # should not be modified
 
+Tinytest.add "autocomplete - params - custom selector", (test) ->
+  rule =
+    selector: (filter) -> { foo: filter }
+  filter = "blah"
+  limit = 5
+
+  [sel, opts] = AutocompleteTest.getFindParams(rule, filter, limit)
+
+  test.equal sel.foo, "blah"
+
 

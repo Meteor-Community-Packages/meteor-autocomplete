@@ -1,3 +1,7 @@
+## v0.4.1
+
+* Allow for creating any custom selector from an autocomplete match, in addition to the standard `$regex` behavior.
+
 ## v0.4.0
 
 * Revamped the behavior of token-less autocompletion. (See #4, #27, and #33)

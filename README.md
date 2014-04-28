@@ -90,12 +90,19 @@ Template.foo.settings = function() {
 - `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
+- `template`: The template that should be used to render each list item.
+- `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
+- `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
+
+Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
+
 - `field`: The field of the collection that the rule will match against. Can be nested, i.e. `'profile.foo'`.
 - `options`: `'i'` (default) to specify the regex matching options.
 - `matchAll`: `false` (default) to match only fields starting with the matched string. (see below)
-- `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
-- `template`: The template that should be used to render each list item.
-- `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
+
+Custom matcher: if this is specified, the default matcher arguments will be ignored.
+
+- `selector`: a one argument `function(match)` that takes the currently matched token suffix and returns the selector that should be added to the argument to `collection.find` to filter the autocomplete results. (**NOTE**: if you are using `$where`, the selector cannot be serialized to the server).
 
 ##### Regex Specification and Options
 
@@ -155,7 +162,7 @@ This (using normal Bootstrap classes) will cause the user to show up in orange f
 For example settings see one of the following:
 
 - https://github.com/mizzao/meteor-autocomplete/blob/master/examples/pubsublocal/client/client.js (from the example app above)
-- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee#L146 (an example used in a chatroom)
+- https://github.com/mizzao/CrowdMapper/blob/master/client/views/chat.coffee (an example used in a chatroom)
 
 ### Future Work (a.k.a. send pull requests)
 
