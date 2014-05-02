@@ -67,7 +67,7 @@ Template.foo.settings = function() {
      },
      {
        token: '!',
-       collection: Dataset,
+       collection: 'Dataset',
        field: "_id",
        options: '',
        matchAll: true,
