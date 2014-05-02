@@ -6,6 +6,14 @@ validateRule = (rule) ->
   if rule.subscription? and not Match.test(rule.collection, String)
     throw new Error("Collection name must be specified as string for server-side search")
 
+getRegExp = (rule) ->
+  if rule.token
+    # Expressions for the range from the last word break to the current cursor position
+    new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$')
+  else
+    # Whole-field behavior - word characters or spaces
+    new RegExp('(^)(.*)$')
+
 getFindParams = (rule, filter, limit) ->
   # This is a different 'filter' - the selector from the settings
   # We need to extend so that we don't copy over rule.filter
@@ -53,8 +61,7 @@ class @AutoComplete
     @rules = settings.rules
     validateRule(rule) for rule in @rules
 
-    # Expressions compiled for the range from the last word break to the current cursor position
-    @expressions = (new RegExp('(^|\\b|\\s)' + (rule.token || '') + '([\\w.]*)$') for rule in @rules)
+    @expressions = (getRegExp(rule) for rule in @rules)
 
     @matched = -1
     @loaded = true
@@ -325,4 +332,5 @@ class @AutoComplete
 
 AutocompleteTest =
   records: AutoCompleteRecords
+  getRegExp: getRegExp
   getFindParams: getFindParams

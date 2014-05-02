@@ -1,6 +1,7 @@
 ## vNEXT
 
-* Added some validation for specifying rules.
+* Added some validation for specifying rules, and tests for regular expressions.
+* Improve behavior of whole-field (tokenless) autocompletion.
 
 ## v0.4.1
 

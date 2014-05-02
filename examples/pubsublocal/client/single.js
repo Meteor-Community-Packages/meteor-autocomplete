@@ -181,6 +181,13 @@ Template.single.legends = function() {
     bg: 'Silver'
   },
   {
+    legend: 'FREE FOOD',
+    code: '42',
+    year: '2014',
+    color: 'Red',
+    bg: 'White'
+  },
+  {
     legend: '',
     code: '',
     year: '',
