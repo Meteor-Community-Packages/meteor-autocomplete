@@ -2,6 +2,10 @@ AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
 
 isServerSearch = (rule) -> _.isString(rule.collection)
 
+validateRule = (rule) ->
+  if rule.subscription? and not Match.test(rule.collection, String)
+    throw new Error("Collection name must be specified as string for server-side search")
+
 getFindParams = (rule, filter, limit) ->
   # This is a different 'filter' - the selector from the settings
   # We need to extend so that we don't copy over rule.filter
@@ -47,6 +51,7 @@ class @AutoComplete
     @position = settings.position || "bottom"
 
     @rules = settings.rules
+    validateRule(rule) for rule in @rules
 
     # Expressions compiled for the range from the last word break to the current cursor position
     @expressions = (new RegExp('(^|\\b|\\s)' + (rule.token || '') + '([\\w.]*)$') for rule in @rules)

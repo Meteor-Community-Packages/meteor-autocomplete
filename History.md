@@ -1,3 +1,7 @@
+## vNEXT
+
+* Added some validation for specifying rules.
+
 ## v0.4.1
 
 * Allow for creating any custom selector from an autocomplete match, in addition to the standard `$regex` behavior.
