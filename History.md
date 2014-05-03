@@ -1,5 +1,9 @@
 ## vNEXT
 
+## v0.4.2
+
+* Get rid of the `jquery-caretposition` and `jquery-migrate` packages. Use the Meteor caret-position package instead.
+
 * Added some validation for specifying rules, and tests for regular expressions.
 * Improve behavior of whole-field (tokenless) autocompletion.
 

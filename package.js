@@ -3,18 +3,13 @@ Package.describe({
 });
 
 Package.on_use(function (api) {
-  api.use(['ui', 'templating'], 'client');
-  api.use(['jquery'], 'client');
+  api.use(['ui', 'templating', 'jquery', 'caret-position'], 'client');
   api.use(['coffeescript', 'underscore']); // both
-
-  // Required by caretposition.js right now
-  api.use('jquery-migrate');
 
   // Our files
   api.add_files([
     'autocomplete.css',
     'inputs.html',
-    'jquery.caretposition.js',
     'autocomplete-client.coffee',
     'templates.coffee'
   ], 'client');

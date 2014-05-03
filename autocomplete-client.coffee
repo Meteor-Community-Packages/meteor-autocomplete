@@ -127,7 +127,7 @@ class @AutoComplete
 
   onKeyUp: (e) ->
     return unless @$element # Don't try to do this while loading
-    startpos = @$element.getCursorPosition() # TODO: this is incorrect on autofocus
+    startpos = @$element.selectionStart  # TODO: is this still incorrect on autofocus?
     val = @getText().substring(0, startpos)
 
     ###
@@ -168,7 +168,7 @@ class @AutoComplete
         @next()
       when 38
         @prev()
-      when 27 # ESCAPE; not sure what function this should serve, cause it's vacuous in jquery-sew
+      when 27 # ESCAPE; not sure what function this should serve, because it's vacuous in jquery-sew
         @hideList()
 
     e.preventDefault()
@@ -248,7 +248,7 @@ class @AutoComplete
 
   # Replace the appropriate region
   replace: (replacement) ->
-    startpos = @$element.getCursorPosition()
+    startpos = @element.selectionStart
     fullStuff = @getText()
     val = fullStuff.substring(0, startpos)
     val = val.replace(@expressions[@matched], "$1" + @rules[@matched].token + replacement)
@@ -256,7 +256,7 @@ class @AutoComplete
     separator = (if posfix.match(/^\s/) then "" else " ")
     finalFight = val + separator + posfix
     @setText finalFight
-    @$element.setCursorPosition val.length + 1
+    @element.setSelectionRange val.length + 1
     return
 
   hideList: ->
@@ -278,19 +278,16 @@ class @AutoComplete
   positionContainer: ->
     # First render; Pick the first item and set css whenever list gets shown
     position = @$element.position()
-    offset = @$element.getCaretPosition(@position)
+    offset = getCaretCoordinates(@element, @element.selectionStart)
 
+    pos = {
+      left: position.left + offset.left
+    }
+    # Position menu from top (above) or from bottom of caret (below, default)
     if @position is "top"
-      # Do some additional calculation to position menu from bottom
-      pos = {
-        left: position.left + offset.left
-        bottom: @$element.offsetParent().height() - position.top + @$element.height() - offset.top
-      }
+      pos.bottom = @$element.offsetParent().height() - position.top - offset.top
     else
-      pos = {
-        left: position.left + offset.left
-        top: position.top + offset.top
-      }
+      pos.top = position.top + offset.top + parseInt(@$element.css('font-size'))
 
     @tmplInst.$(".-autocomplete-container").css(pos)
 
