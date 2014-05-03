@@ -16,11 +16,6 @@
         "tag": "v3.1.1-1",
         "commit": "63dd38968828bb8963636df93e9a1c45e2dfe67e"
       },
-      "jquery-migrate": {
-        "git": "https://github.com/canadaduane/meteor-jquery-migrate.git",
-        "tag": "v2.0.0",
-        "commit": "636819c9de59f66410e148867b229869bb045cea"
-      }
     }
   }
 }

@@ -1,13 +1,13 @@
 StandardLegends = new Meteor.Collection(null);
 
 Template.single.settings = {
-  position: "bottom",
+  position: 'bottom',
   limit: 10,
   rules: [
     {
       // token: '',
       collection: StandardLegends,
-      field: "legend",
+      field: 'legend',
       matchAll: true,
       template: Template.standardLegends
     }
