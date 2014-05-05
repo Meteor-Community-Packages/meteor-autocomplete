@@ -3,7 +3,7 @@
     "description": "Text input autocomplete using Meteor collections",
     "homepage": "https://github.com/mizzao/meteor-autocomplete",
     "author": "Andrew Mao  (https://github.com/mizzao/)",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "git": "https://github.com/mizzao/meteor-autocomplete.git",
     "packages": {
       "caret-position": {}

@@ -1,3 +1,7 @@
+## v0.4.3
+
+* Fix an issue where caret position was incorrect on a focus.
+
 ## v0.4.2
 
 * Use the Meteor caret-position package instead of the `jquery-caretposition` and `jquery-migrate` packages.

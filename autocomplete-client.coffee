@@ -125,10 +125,8 @@ class @AutoComplete
     @loaded = val
     @loadingDep.changed()
 
-  onKeyUp: (e) ->
+  onKeyUp: ->
     return unless @$element # Don't try to do this while loading
-    # TODO: this will be 0 on focus, regardless of the actual position
-    # It should be fixed by the caret-position package.
     startpos = @element.selectionStart
     val = @getText().substring(0, startpos)
 
@@ -177,7 +175,10 @@ class @AutoComplete
 
     return
 
-  onFocus: -> @onKeyUp()
+  onFocus: ->
+    # We need to run onKeyUp after the focus resolves,
+    # or the caret position (selectionStart) will not be correct
+    Meteor.defer => @onKeyUp()
 
   onBlur: ->
     # We need to delay this so click events work

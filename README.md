@@ -173,9 +173,7 @@ For example settings see one of the following:
 
 ### Known Issues
 
-- Cursor position may be incorrect on a focus
 - Regexp only matches from beginning to cursor position in word (done in jquery-sew, could use rewrite)
-- Escape key behavior copied from jquery-sew but it's rather vacuous
 - Enter key doesn't bubble if no match on a rule (possibly a feature)
 
 ### Credits/Notes
