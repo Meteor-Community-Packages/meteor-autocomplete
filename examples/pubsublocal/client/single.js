@@ -1,7 +1,7 @@
 StandardLegends = new Meteor.Collection(null);
 
 Template.single.settings = {
-  position: 'bottom',
+  position: 'top',
   limit: 10,
   rules: [
     {

@@ -3,8 +3,10 @@ Package.describe({
 });
 
 Package.on_use(function (api) {
-  api.use(['ui', 'templating', 'jquery', 'caret-position'], 'client');
+  api.use(['ui', 'templating', 'jquery'], 'client');
   api.use(['coffeescript', 'underscore']); // both
+
+  api.use('caret-position', 'client');
 
   // Our files
   api.add_files([

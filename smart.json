@@ -6,6 +6,6 @@
     "version": "0.4.2",
     "git": "https://github.com/mizzao/meteor-autocomplete.git",
     "packages": {
-      "caret-position": ""
+      "caret-position": {}
     }
 }

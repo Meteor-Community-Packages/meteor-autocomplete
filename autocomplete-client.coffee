@@ -127,7 +127,9 @@ class @AutoComplete
 
   onKeyUp: (e) ->
     return unless @$element # Don't try to do this while loading
-    startpos = @$element.selectionStart  # TODO: is this still incorrect on autofocus?
+    # TODO: this will be 0 on focus, regardless of the actual position
+    # It should be fixed by the caret-position package.
+    startpos = @element.selectionStart
     val = @getText().substring(0, startpos)
 
     ###
@@ -161,17 +163,19 @@ class @AutoComplete
   onKeyDown: (e) =>
     return if @matched is -1 or (@constructor.KEYS.indexOf(e.keyCode) < 0)
 
+    e.preventDefault()
     switch e.keyCode
       when 9, 13 # TAB, ENTER
         e.stopPropagation() if @select() # Don't jump fields or submit if select successful
-      when 40
+      when 40 # DOWN
         @next()
-      when 38
+      when 38 # UP
         @prev()
-      when 27 # ESCAPE; not sure what function this should serve, because it's vacuous in jquery-sew
+      when 27 # ESCAPE
+        @$element.blur()
         @hideList()
 
-    e.preventDefault()
+    return
 
   onFocus: -> @onKeyUp()
 
@@ -256,7 +260,9 @@ class @AutoComplete
     separator = (if posfix.match(/^\s/) then "" else " ")
     finalFight = val + separator + posfix
     @setText finalFight
-    @element.setSelectionRange val.length + 1
+
+    newPosition = val.length + 1
+    @element.setSelectionRange(newPosition, newPosition)
     return
 
   hideList: ->
@@ -283,6 +289,7 @@ class @AutoComplete
     pos = {
       left: position.left + offset.left
     }
+
     # Position menu from top (above) or from bottom of caret (below, default)
     if @position is "top"
       pos.bottom = @$element.offsetParent().height() - position.top - offset.top
