@@ -167,7 +167,7 @@ For example settings see one of the following:
 
 ### Future Work (a.k.a. send pull requests)
 
-- To reduce latency, the server could use `Meteor.methods` to return an array of documents, instead of pub/sub, if the client's cache of the collection is assumed to be read-only.
+- To reduce latency, we could additionally support using `Meteor.methods` to return an array of documents, instead of a subscription, if the client's cache of the collection is assumed to be read-only or if changes don't matter.
 - The widget can keep track of a list of ordered document ids for matched items instead of just spitting out the fields (which currently should be unique)
 - Could potentially support rendering DOM elements instead of just text. However, this can currently be managed in post-processing code for chat/post functions (like how GitHub does it).
 
