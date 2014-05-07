@@ -18,12 +18,13 @@ Auto-completes typing in text `input`s or `textarea`s from different local or re
 ![Autocompleting something else](https://raw.github.com/mizzao/meteor-autocomplete/master/docs/mention2.png)
 
 Features:
- - Multiple collection matching with different tokens and fields
- - Fully live and reactive Meteor template rendering of list items
- - Automatically positioned above or below text
+ - Multiple collection matching with different trigger tokens and fields
+ - Fully live and reactive Meteor template rendering of drop-down list items
+ - Drop-down can be positioned above or below the text
  - Mouse or keyboard interaction with autocomplete menu
+ - Simple token-less autocompletion in an `<input>` element, just like Bootstrap typeahead
 
-Meteor's client-side data availability makes this dynamic, full-fledged autocomplete widget possible. Use it in chat rooms, comments, other messaging systems, or whatever strikes your fancy.
+Meteor's client-side data availability makes this dynamic, full-fledged autocomplete widget possible. Use it in chat rooms, comments, other messaging systems, or wherever strikes your fancy.
 
 ## Usage
 
@@ -120,7 +121,10 @@ Mixing tokens with tokenless autocompletion is unsupported and will probably res
 
 For security purposes, a default implementation of server-side autocomplete is only provided for insecure collections, to be used while prototyping. In all other applications, write your own publish function with the same arguments as in the [autocomplete-recordset](autocomplete-server.coffee) publication and secure it properly, given that clients can subscribe to this function in ways other than your client code intends. Make sure to push documents to the `AutoCompleteRecords` client-side collection.
 
-Use of a custom publish function also allows you to use full-text search services outside of Meteor, such as [ElasticSearch](http://www.elasticsearch.org/).
+Use of a custom publish function also allows you to:
+
+* use full-text search services outside of Meteor, such as [ElasticSearch](http://www.elasticsearch.org/)
+* use [preferential matching](https://github.com/mizzao/meteor-autocomplete/blob/a437c7b464ad9e779da2ca15566a5b91cf603902/autocomplete-server.coffee) for record fields that start with the autocomplete text, rather than contain it anywhere
 
 ##### Autocomplete Templates
 
