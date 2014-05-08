@@ -1,7 +1,7 @@
 Meteor.publish 'autocomplete-recordset', (selector, options, collName) ->
   collection = global[collName]
   unless collection
-    throw new Error(collName + ' is not a defined on the global namespace of the server.')
+    throw new Error(collName + ' is not defined on the global namespace of the server.')
 
   # This is a semi-documented Meteor feature:
   # https://github.com/meteor/meteor/blob/devel/packages/mongo-livedata/collection.js
