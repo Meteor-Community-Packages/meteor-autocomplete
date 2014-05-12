@@ -1,7 +1,7 @@
 meteor-autocomplete [![Build Status](https://travis-ci.org/mizzao/meteor-autocomplete.svg)](https://travis-ci.org/mizzao/meteor-autocomplete)
 ===================
 
-Prefix auto-completion using documents and fields in client- or server-side Meteor collections.
+Client/server autocompletion designed for Meteor's collections and reactivity.
 
 Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
 

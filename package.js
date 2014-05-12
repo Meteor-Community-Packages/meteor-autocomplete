@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "Autocomplete using Meteor collections on client and server"
+  summary: "Client/server autocompletion designed for Meteor's collections and reactivity"
 });
 
 Package.on_use(function (api) {
