@@ -1,4 +1,4 @@
-## vNEXT
+## v0.4.4
 
 * Simulate pre-Blaze rendering behavior to properly deal with changing data contexts, until an updated Blaze Component API is released.
 * Support a custom specified template when no match is found. (#25)
