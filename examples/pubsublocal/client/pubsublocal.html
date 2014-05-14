@@ -53,3 +53,7 @@
 <template name="clientCollectionPill">
   {{type}} <small class="muted">({{_id}})</small>
 </template>
+
+<template name="serverNoMatch">
+    <span class="text-danger">Nothing found on the server for <b>{{getFilter}}</b>!</span>
+</template>

@@ -16,6 +16,7 @@ Template.pubsub.settings = {
       field: 'name',
       options: '', // Use case-sensitive match to take advantage of server index.
       template: Template.serverCollectionPill,
+      noMatchTemplate: Template.serverNoMatch,
       callback: function(doc) { console.log(doc); }
     },
     {

@@ -3,7 +3,7 @@ meteor-autocomplete [![Build Status](https://travis-ci.org/mizzao/meteor-autocom
 
 Client/server autocompletion designed for Meteor's collections and reactivity.
 
-Check out a demo app at http://autocomplete.meteor.com or the [source](https://github.com/mizzao/meteor-autocomplete/tree/master/examples/pubsublocal).
+Check out a demo app at http://autocomplete.meteor.com or the [source](examples/pubsublocal).
 
 Help keep your favorite Meteor packages alive! If you depend on this package in your app and find it useful, consider a donation at [Gittip](https://www.gittip.com/mizzao/) for me (or other Meteor package maintainers).
 
@@ -11,11 +11,11 @@ Help keep your favorite Meteor packages alive! If you depend on this package in 
 
 Auto-completes typing in text `input`s or `textarea`s from different local or remote Meteor collections when triggered by certain symbols. You've probably seen this when referring to users or issues in a GitHub conversation. For example, you may want to ping a user:
 
-![Autocompleting a user](https://raw.github.com/mizzao/meteor-autocomplete/master/docs/mention1.png)
+![Autocompleting a user](docs/mention1.png)
 
 ...and ask them to look at a certain item:
 
-![Autocompleting something else](https://raw.github.com/mizzao/meteor-autocomplete/master/docs/mention2.png)
+![Autocompleting something else](docs/mention2.png)
 
 Features:
  - Multiple collection matching with different trigger tokens and fields
@@ -93,6 +93,7 @@ Template.foo.settings = function() {
 - `subscription`: A custom subscription for server-side search; see below.
 - `template`: The template that should be used to render each list item.
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
+- `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
 - `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
@@ -174,11 +175,6 @@ For example settings see one of the following:
 - To reduce latency, we could additionally support using `Meteor.methods` to return an array of documents, instead of a subscription, if the client's cache of the collection is assumed to be read-only or if changes don't matter.
 - The widget can keep track of a list of ordered document ids for matched items instead of just spitting out the fields (which currently should be unique)
 - Could potentially support rendering DOM elements instead of just text. However, this can currently be managed in post-processing code for chat/post functions (like how GitHub does it).
-
-### Known Issues
-
-- Regexp only matches from beginning to cursor position in word (done in jquery-sew, could use rewrite)
-- Enter key doesn't bubble if no match on a rule (possibly a feature)
 
 ### Credits/Notes
 

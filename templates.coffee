@@ -48,3 +48,6 @@ Template._autocompleteContainer.events =
   "mouseenter .-autocomplete-item": (e, tmplInst) -> tmplInst.data.onItemHover(this, e)
 
 Template._autocompleteContainer.empty = -> @filteredList().count() is 0
+
+Template._autocompleteContainer.noMatchTemplate = ->
+  @matchedRule().noMatchTemplate || Template._noMatch

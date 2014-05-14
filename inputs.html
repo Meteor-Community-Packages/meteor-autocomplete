@@ -27,11 +27,15 @@
                 {{/each}}
             </ul>
             {{else}}
-            (<i>no matches</i>)
+                {{> noMatchTemplate }}
             {{/unless}}
         {{else}}
             <i>loading...</i>
         {{/if}}
     </div>
     {{/if}}
+</template>
+
+<template name="_noMatch">
+    (<i>no matches</i>)
 </template>
