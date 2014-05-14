@@ -1,9 +1,9 @@
-<template name="inputAutocomplete">
+<template name="_inputAutocomplete">
     <input type="text" {{attributes}}>
     {{> _autocompleteContainer ac}}
 </template>
 
-<template name="textareaAutocomplete">
+<template name="_textareaAutocomplete">
     <textarea {{attributes}}>
         {{> UI.contentBlock}}
     </textarea>
@@ -11,14 +11,14 @@
 </template>
 
 <template name="_autocompleteContainer">
-    {{#if shown}}
+    {{#if isShowing}}
     <div class='-autocomplete-container'>
         {{#if isLoaded}}
             {{#unless empty}}
             <ul class='-autocomplete-list'>
-                {{#each items}}
+                {{#each filteredList}}
                 <li class="-autocomplete-item">
-                    {{#with itemTemplate .. }}
+                    {{#with ../currentTemplate }}
                         {{#with ..}}  {{! original 'data' context to itemTemplate}}
                             {{> ..}}  {{! return value from itemTemplate }}
                         {{/with}}

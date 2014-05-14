@@ -1,3 +1,7 @@
+## vNEXT
+
+* Simulate pre-Blaze rendering behavior to properly deal with changing data contexts, until an updated Blaze Component API is released.
+
 ## v0.4.3
 
 * Fix an issue where caret position was incorrect on a focus.

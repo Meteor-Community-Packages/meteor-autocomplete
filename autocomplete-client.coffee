@@ -96,7 +96,6 @@ class @AutoComplete
   teardown: ->
     # Stop the reactive computation we started for this autocomplete instance
     @comp.stop()
-    # console.log "cleaned up the computation"
 
   # reactive getters and setters for @filter and the currently matched rule
   matchedRule: ->
@@ -158,7 +157,7 @@ class @AutoComplete
       break if breakLoop
       i++
 
-  onKeyDown: (e) =>
+  onKeyDown: (e) ->
     return if @matched is -1 or (@constructor.KEYS.indexOf(e.keyCode) < 0)
 
     e.preventDefault()
