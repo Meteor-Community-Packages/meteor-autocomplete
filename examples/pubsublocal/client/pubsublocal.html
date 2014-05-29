@@ -29,7 +29,8 @@
   <p>There's also a client-only collection. Type '!' then some fruit names.</p>
 
   <div class="well">
-  {{> inputAutocomplete settings=settings id="autocomplete-input" class="form-control" placeholder="Type here..." autofocus="autofocus"}}
+  {{#textareaAutocomplete settings=settings id="autocomplete-input" class="form-control" placeholder="Type here..." autofocus="autofocus"}}
+  {{/textareaAutocomplete}}
   </div>
 
   <h2>Tests to try</h2>

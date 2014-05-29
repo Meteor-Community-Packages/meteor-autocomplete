@@ -4,9 +4,8 @@
 </template>
 
 <template name="_textareaAutocomplete">
-    <textarea {{attributes}}>
-        {{> UI.contentBlock}}
-    </textarea>
+    <textarea {{attributes}}></textarea>
+    {{! TODO: bring back > UI.contentBlock in textarea when Blaze Component API updates}}
     {{> _autocompleteContainer ac}}
 </template>
 

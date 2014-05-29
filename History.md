@@ -1,3 +1,7 @@
+## v0.4.5
+
+* Temporarily disable textarea block helper content until the Blaze API is updated.
+
 ## v0.4.4
 
 * Simulate pre-Blaze rendering behavior to properly deal with changing data contexts, until an updated Blaze Component API is released.
