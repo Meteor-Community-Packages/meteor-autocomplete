@@ -4,8 +4,7 @@
 </template>
 
 <template name="textareaAutocomplete">
-    <textarea {{attributes}}></textarea>
-    {{! TODO bring back UI.contentBlock when bugs fixed}}
+    <textarea {{attributes}}>{{> UI.contentBlock}}</textarea>
     {{> autocompleteContainer}}
 </template>
 
