@@ -1,4 +1,4 @@
-## vNEXT
+## v0.4.6
 
 * Refactor UI components using the new Blaze API on Meteor 0.8.3, with Blaze Views.
 * Restore textarea block helper content.
