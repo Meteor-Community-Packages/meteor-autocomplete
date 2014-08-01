@@ -24,8 +24,8 @@ getFindParams = (rule, filter, limit) ->
   return [ selector, options ] unless filter
 
   sortspec = {}
-  sortspec[rule.field] = 1
   # Only sort if there is a filter, for faster performance on a match of anything
+  if rule.field then sortspec[rule.field] = 1
   options.sort = sortspec
 
   if _.isFunction(rule.selector)
