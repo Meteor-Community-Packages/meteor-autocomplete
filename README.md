@@ -102,7 +102,7 @@ Default matcher arguments: the default behavior is to create a regex against the
 - `options`: `'i'` (default) to specify the regex matching options.
 - `matchAll`: `false` (default) to match only fields starting with the matched string. (see below)
 
-Custom matcher: if this is specified, the default matcher arguments will be ignored.
+Custom matcher: if this is specified, the *default* matcher arguments will be ignored. (Note that you should still specify `field`.)
 
 - `selector`: a one argument `function(match)` that takes the currently matched token suffix and returns the selector that should be added to the argument to `collection.find` to filter the autocomplete results. (**NOTE**: if you are using `$where`, the selector cannot be serialized to the server).
 
