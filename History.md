@@ -1,3 +1,8 @@
+## vNEXT
+
+* Made pre-sorting the autocomplete list an option that is off by default, for better performance on searches over large collections, especially on the client.
+* Fix errors resulting from trying to select nonexistent items.
+
 ## v0.4.6
 
 * Refactor UI components using the new Blaze API on Meteor 0.8.3, with Blaze Views.
