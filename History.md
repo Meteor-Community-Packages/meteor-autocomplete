@@ -1,5 +1,6 @@
-## vNEXT
+## v0.4.7
 
+* **Updated for Meteor 0.9.**
 * Made pre-sorting the autocomplete list an option that is off by default, for better performance on searches over large collections, especially on the client.
 * Fix errors resulting from trying to select nonexistent items.
 
