@@ -28,10 +28,10 @@ Meteor's client-side data availability makes this dynamic, full-fledged autocomp
 
 ## Usage
 
-Use Meteorite to install the package:
+Use Meteor to install the package:
 
 ```
-mrt add autocomplete
+meteor add mizzao:autocomplete
 ```
 
 Add a text `input` or `textarea` to a template in one of the following ways, as a Spacebars template or block helper. Pass in any HTML parameters as other arguments to the template:
