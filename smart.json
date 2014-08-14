@@ -1,4 +1,9 @@
 {
+  "packages": {
+    "mizzao:autocomplete": {
+      "path": "."
+    }
+  },
   "meteor": {
     "branch": "devel",
     "git": "https://github.com/meteor/meteor.git"
