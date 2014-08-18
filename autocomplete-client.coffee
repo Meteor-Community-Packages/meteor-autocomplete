@@ -231,8 +231,8 @@ class @AutoComplete
     node = @tmplInst.find(".-autocomplete-item.selected")
     return false unless node?
     doc = UI.getElementData(node)
+    @$element.trigger("selectionNotFound") unless doc
     return false unless doc # Don't select if nothing matched
-
     @processSelection(doc, @rules[@matched])
     return true
 
@@ -250,6 +250,7 @@ class @AutoComplete
 
     # TODO: behave better if the callback throws an error
     rule.callback?(doc, @$element) # Notify that the item has been selected
+    @$element.trigger("selectionFound", doc);
     @hideList()
     return
 
