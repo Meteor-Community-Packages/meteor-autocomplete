@@ -230,7 +230,7 @@ class @AutoComplete
   select: ->
     node = @tmplInst.find(".-autocomplete-item.selected")
     return false unless node?
-    doc = UI.getElementData(node)
+    doc = Blaze.getData()(node)
     return false unless doc # Don't select if nothing matched
 
     @processSelection(doc, @rules[@matched])

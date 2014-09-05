@@ -15,7 +15,7 @@ Template.textareaAutocomplete.attributes = attributes
 
 Template.inputAutocomplete.autocompleteContainer =
 Template.textareaAutocomplete.autocompleteContainer =
-Template.__create__('AutocompleteContainer', ->
+new Template('AutocompleteContainer', ->
   ac = new AutoComplete( Blaze.getCurrentData().settings )
   # Set the autocomplete object on the parent template instance
   # TODO: this does not seem like a good API to be using :)
