@@ -26,7 +26,7 @@ meteor-platform@1.0.2
 meteor@1.0.3
 minifiers@1.0.2
 minimongo@1.0.2
-mizzao:autocomplete@0.4.7
+mizzao:autocomplete@0.4.8
 mizzao:bootstrap-3@3.2.0
 mongo@1.0.4
 observe-sequence@1.0.2
