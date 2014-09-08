@@ -16,13 +16,13 @@ Template.textareaAutocomplete.attributes = attributes
 Template.inputAutocomplete.autocompleteContainer =
 Template.textareaAutocomplete.autocompleteContainer =
 new Template('AutocompleteContainer', ->
-  ac = new AutoComplete( Blaze.getCurrentData().settings )
+  ac = new AutoComplete( Blaze.getData().settings )
   # Set the autocomplete object on the parent template instance
-  # TODO: this does not seem like a good API to be using :)
-  Template.__updateTemplateInstance(this.parentView).ac = ac
+  this.parentView.templateInstance().ac = ac
+
   # Set nodes on render in the autocomplete class
-  this.onRendered ->
-    ac.element = this.parentView.domrange.firstNode()
+  this.onViewReady ->
+    ac.element = this.parentView.firstNode()
     ac.$element = $(ac.element)
 
   return Blaze.With(ac, -> Template._autocompleteContainer)
