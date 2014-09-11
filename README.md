@@ -28,10 +28,10 @@ Meteor's client-side data availability makes this dynamic, full-fledged autocomp
 
 ## Usage
 
-Use Meteorite to install the package:
+Use Meteor to install the package:
 
 ```
-mrt add autocomplete
+meteor add mizzao:autocomplete
 ```
 
 Add a text `input` or `textarea` to a template in one of the following ways, as a Spacebars template or block helper. Pass in any HTML parameters as other arguments to the template:
@@ -95,6 +95,7 @@ Template.foo.settings = function() {
 - `subscription`: A custom subscription for server-side search; see below.
 - `template`: The template that should be used to render each list item.
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
+- `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
 - `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
 - `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
 
@@ -104,7 +105,7 @@ Default matcher arguments: the default behavior is to create a regex against the
 - `options`: `'i'` (default) to specify the regex matching options.
 - `matchAll`: `false` (default) to match only fields starting with the matched string. (see below)
 
-Custom matcher: if this is specified, the default matcher arguments will be ignored.
+Custom matcher: if this is specified, the *default* matcher arguments will be ignored. (Note that you should still specify `field`.)
 
 - `selector`: a one argument `function(match)` that takes the currently matched token suffix and returns the selector that should be added to the argument to `collection.find` to filter the autocomplete results. (**NOTE**: if you are using `$where`, the selector cannot be serialized to the server).
 

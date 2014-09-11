@@ -4,7 +4,7 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-autocomplete
 coffeescript
 insecure
-bootstrap-3
+mizzao:autocomplete
+mizzao:bootstrap-3

@@ -52,9 +52,20 @@ Tinytest.add "autocomplete - params - no sort if filter empty", (test) ->
 
   test.isFalse opts.sort
 
-Tinytest.add "autocomplete - params - sort if filter exists", (test) ->
+Tinytest.add "autocomplete - params - no sort by default", (test) ->
   rule =
     field: "foo"
+  filter = "blah"
+  limit = 5
+
+  [sel, opts] = AutocompleteTest.getFindParams(rule, filter, limit)
+
+  test.isFalse opts.sort
+
+Tinytest.add "autocomplete - params - sort if enabled and filter exists", (test) ->
+  rule =
+    field: "foo"
+    sort: true
   filter = "blah"
   limit = 5
 

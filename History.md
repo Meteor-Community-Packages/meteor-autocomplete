@@ -1,3 +1,18 @@
+## v0.4.8
+
+* Updates for Meteor 0.9.1 APIs, since we use a lot of weird stuff. This is just to get things working; expect some general cleanup in the future as Meteor's API stabilizes for 1.0.
+
+## v0.4.7
+
+* **Updated for Meteor 0.9.**
+* Made pre-sorting the autocomplete list an option that is off by default, for better performance on searches over large collections, especially on the client.
+* Fix errors resulting from trying to select nonexistent items.
+
+## v0.4.6
+
+* Refactor UI components using the new Blaze API on Meteor 0.8.3, with Blaze Views.
+* Restore textarea block helper content.
+
 ## v0.4.5
 
 * Temporarily disable textarea block helper content until the Blaze API is updated.

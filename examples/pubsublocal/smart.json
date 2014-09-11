@@ -1,8 +1,7 @@
 {
   "packages": {
-    "autocomplete": {
+    "mizzao:autocomplete": {
       "path": "../.."
-    },
-    "bootstrap-3": {}
+    }
   }
 }

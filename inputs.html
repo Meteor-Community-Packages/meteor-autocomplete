@@ -1,12 +1,11 @@
-<template name="_inputAutocomplete">
+<template name="inputAutocomplete">
     <input type="text" {{attributes}}>
-    {{> _autocompleteContainer ac}}
+    {{> autocompleteContainer}}
 </template>
 
-<template name="_textareaAutocomplete">
-    <textarea {{attributes}}></textarea>
-    {{! TODO: bring back > UI.contentBlock in textarea when Blaze Component API updates}}
-    {{> _autocompleteContainer ac}}
+<template name="textareaAutocomplete">
+    <textarea {{attributes}}>{{> UI.contentBlock}}</textarea>
+    {{> autocompleteContainer}}
 </template>
 
 <template name="_autocompleteContainer">

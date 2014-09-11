@@ -23,10 +23,11 @@ getFindParams = (rule, filter, limit) ->
   # Match anything, no sort, limit X
   return [ selector, options ] unless filter
 
-  sortspec = {}
-  sortspec[rule.field] = 1
-  # Only sort if there is a filter, for faster performance on a match of anything
-  options.sort = sortspec
+  if rule.sort and rule.field
+    sortspec = {}
+    # Only sort if there is a filter, for faster performance on a match of anything
+    sortspec[rule.field] = 1
+    options.sort = sortspec
 
   if _.isFunction(rule.selector)
     # Custom selector
@@ -227,7 +228,9 @@ class @AutoComplete
 
   # Replace text with currently selected item
   select: ->
-    doc = UI.getElementData @tmplInst.find(".-autocomplete-item.selected")
+    node = @tmplInst.find(".-autocomplete-item.selected")
+    return false unless node?
+    doc = Blaze.getData(node)
     return false unless doc # Don't select if nothing matched
 
     @processSelection(doc, @rules[@matched])
