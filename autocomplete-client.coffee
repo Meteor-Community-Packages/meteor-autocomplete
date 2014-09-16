@@ -66,6 +66,7 @@ class @AutoComplete
 
     @matched = -1
     @loaded = true
+    @wholeField = not @rules[0].token?
 
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
@@ -290,7 +291,7 @@ class @AutoComplete
     offset = getCaretCoordinates(@element, @element.selectionStart)
 
     pos = {
-      left: position.left + offset.left
+      left: position.left + if @wholeField then 0 else offset.left
     }
 
     # Position menu from top (above) or from bottom of caret (below, default)
