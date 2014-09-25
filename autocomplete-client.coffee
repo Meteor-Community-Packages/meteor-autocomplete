@@ -288,17 +288,22 @@ class @AutoComplete
   positionContainer: ->
     # First render; Pick the first item and set css whenever list gets shown
     position = @$element.position()
-    offset = getCaretCoordinates(@element, @element.selectionStart)
 
-    pos = {
-      left: position.left + if @wholeField then 0 else offset.left
-    }
-
-    # Position menu from top (above) or from bottom of caret (below, default)
-    if @position is "top"
-      pos.bottom = @$element.offsetParent().height() - position.top - offset.top
+    if @wholeField
+      pos =
+        left: position.left
+        top: position.top + @$element.outerHeight() # position.offsetHeight
+        width: @$element.outerWidth() # position.offsetWidth
     else
-      pos.top = position.top + offset.top + parseInt(@$element.css('font-size'))
+      offset = getCaretCoordinates(@element, @element.selectionStart)
+      pos =
+        left: position.left + offset.left
+
+      # Position menu from top (above) or from bottom of caret (below, default)
+      if @position is "top"
+        pos.bottom = @$element.offsetParent().height() - position.top - offset.top
+      else
+        pos.top = position.top + offset.top + parseInt(@$element.css('font-size'))
 
     @tmplInst.$(".-autocomplete-container").css(pos)
 
