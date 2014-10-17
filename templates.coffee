@@ -10,23 +10,24 @@ Template.textareaAutocomplete.events(acEvents)
 
 attributes = -> _.omit(@, 'settings') # Render all but the settings parameter
 
-Template.inputAutocomplete.attributes =
-Template.textareaAutocomplete.attributes = attributes
+autocompleteHelpers = {
+  attributes,
+  autocompleteContainer: new Template('AutocompleteContainer', ->
+    ac = new AutoComplete( Blaze.getData().settings )
+    # Set the autocomplete object on the parent template instance
+    this.parentView.templateInstance().ac = ac
 
-Template.inputAutocomplete.autocompleteContainer =
-Template.textareaAutocomplete.autocompleteContainer =
-new Template('AutocompleteContainer', ->
-  ac = new AutoComplete( Blaze.getData().settings )
-  # Set the autocomplete object on the parent template instance
-  this.parentView.templateInstance().ac = ac
+    # Set nodes on render in the autocomplete class
+    this.onViewReady ->
+      ac.element = this.parentView.firstNode()
+      ac.$element = $(ac.element)
 
-  # Set nodes on render in the autocomplete class
-  this.onViewReady ->
-    ac.element = this.parentView.firstNode()
-    ac.$element = $(ac.element)
+    return Blaze.With(ac, -> Template._autocompleteContainer)
+  )
+}
 
-  return Blaze.With(ac, -> Template._autocompleteContainer)
-)
+Template.inputAutocomplete.helpers(autocompleteHelpers)
+Template.textareaAutocomplete.helpers(autocompleteHelpers)
 
 Template._autocompleteContainer.rendered = ->
   @data.tmplInst = this
@@ -44,7 +45,6 @@ Template._autocompleteContainer.events
   "click .-autocomplete-item": (e, t) -> t.data.onItemClick(this, e)
   "mouseenter .-autocomplete-item": (e, t) -> t.data.onItemHover(this, e)
 
-Template._autocompleteContainer.empty = -> @filteredList().count() is 0
-
-Template._autocompleteContainer.noMatchTemplate = ->
-  @matchedRule().noMatchTemplate || Template._noMatch
+Template._autocompleteContainer.helpers
+  empty: -> @filteredList().count() is 0
+  noMatchTemplate: -> @matchedRule().noMatchTemplate || Template._noMatch

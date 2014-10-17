@@ -6,7 +6,7 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom("0.9.1");
+  api.versionsFrom("0.9.4");
 
   api.use(['blaze', 'templating', 'jquery'], 'client');
   api.use(['coffeescript', 'underscore']); // both

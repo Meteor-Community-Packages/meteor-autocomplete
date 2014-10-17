@@ -1,3 +1,7 @@
+## vNEXT
+
+* Update usage of template helpers for Meteor 0.9.4.
+
 ## v0.4.8
 
 * Updates for Meteor 0.9.1 APIs, since we use a lot of weird stuff. This is just to get things working; expect some general cleanup in the future as Meteor's API stabilizes for 1.0.
