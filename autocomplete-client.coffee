@@ -258,9 +258,14 @@ class @AutoComplete
     startpos = @element.selectionStart
     fullStuff = @getText()
     val = fullStuff.substring(0, startpos)
-    val = val.replace(@expressions[@matched], "$1" + @rules[@matched].token + replacement)
+
+    replace = if @rules[@matched].replacement != undefined then @rules[@matched].replacement else @rules[@matched].token
+
+    val = val.replace(@expressions[@matched], "$1" + replace + replacement)
     posfix = fullStuff.substring(startpos, fullStuff.length)
-    separator = (if posfix.match(/^\s/) then "" else " ")
+
+    separator = if @rules[@matched].end_token != undefined then @rules[@matched].end_token else (if posfix.match(/^\s/) then "" else " ")
+    
     finalFight = val + separator + posfix
     @setText finalFight
 

@@ -88,7 +88,9 @@ Template.foo.settings = function() {
 
 ##### Rule Specific Options
 
-- `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
+- `token`: (optional) What string should trigger this rule. Leave blank for whole-field behavior (see below).
+- end_token: (optional) What string to add to the end of an autocomplete.
+- replacement: (optional) What string to replace the "token" with after autocompleting.
 - `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
 - `template`: The template that should be used to render each list item.
