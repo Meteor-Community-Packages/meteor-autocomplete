@@ -6,8 +6,12 @@ validateRule = (rule) ->
   if rule.subscription? and not Match.test(rule.collection, String)
     throw new Error("Collection name must be specified as string for server-side search")
 
+isWholeField = (rule) ->
+  # either '' or null both count as whole field.
+  return !rule.token
+
 getRegExp = (rule) ->
-  if rule.token
+  unless isWholeField(rule)
     # Expressions for the range from the last word break to the current cursor position
     new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$')
   else
@@ -66,7 +70,6 @@ class @AutoComplete
 
     @matched = -1
     @loaded = true
-    @wholeField = not @rules[0].token?
 
     # Reactive dependencies for current matching rule and filter
     @ruleDep = new Deps.Dependency
@@ -162,13 +165,17 @@ class @AutoComplete
   onKeyDown: (e) ->
     return if @matched is -1 or (@constructor.KEYS.indexOf(e.keyCode) < 0)
 
-    e.preventDefault()
     switch e.keyCode
       when 9, 13 # TAB, ENTER
-        e.stopPropagation() if @select() # Don't jump fields or submit if select successful
+        if @select() # Don't jump fields or submit if select successful
+          e.preventDefault()
+          e.stopPropagation()
+      # preventDefault needed below to avoid moving cursor when selecting
       when 40 # DOWN
+        e.preventDefault()
         @next()
       when 38 # UP
+        e.preventDefault()
         @prev()
       when 27 # ESCAPE
         @$element.blur()
@@ -217,7 +224,7 @@ class @AutoComplete
   isShowing: ->
     rule = @matchedRule()
     # Same rules as above
-    showing = rule isnt null and (rule.token or @getFilter())
+    showing = rule? and (rule.token or @getFilter())
 
     # Do this after the render
     if showing
@@ -240,18 +247,22 @@ class @AutoComplete
   processSelection: (doc, rule) ->
     replacement = getField(doc, rule.field)
 
-    if rule.token
+    unless isWholeField(rule)
       @replace(replacement, rule)
+      @hideList()
+
     else
       # Empty string or doesn't exist?
       # Single-field replacement: replace whole field
       @setText(replacement)
-      # Blur field so it doesn't get auto selected again
-      @$element.blur()
+
+      # Field retains focus, but list is hidden unless another key is pressed
+      # Must be deferred or onKeyUp will trigger and match again
+      # TODO this is a hack; see above
+      @onBlur()
 
     # TODO: behave better if the callback throws an error
     rule.callback?(doc, @$element) # Notify that the item has been selected
-    @hideList()
     return
 
   # Replace the appropriate region
@@ -289,12 +300,17 @@ class @AutoComplete
     # First render; Pick the first item and set css whenever list gets shown
     position = @$element.position()
 
-    if @wholeField
+    rule = @matchedRule()
+    # In whole-field positioning, we don't move the container and make it the
+    # full width of the field.
+    # TODO allow this to render top as well, and possibly used in textareas?
+    if rule? and isWholeField(rule)
       pos =
         left: position.left
         top: position.top + @$element.outerHeight() # position.offsetHeight
-        width: @$element.outerWidth() # position.offsetWidth
-    else
+        width: @$element.outerWidth()               # position.offsetWidth
+
+    else # Normal positioning, at token word
       offset = getCaretCoordinates(@element, @element.selectionStart)
       pos =
         left: position.left + offset.left

@@ -1,6 +1,10 @@
 ## vNEXT
 
-* Update usage of template helpers for Meteor 0.9.4.
+## v0.4.9
+
+* Update usage of template helpers for Meteor 0.9.4. (#66, #67)
+* Don't follow the cursor in whole-field autocompletion mode (#55, #63 -thanks @cretep).
+* Better compatibility of whole-field mode when using `TAB` and `Shift+TAB` after selections. (#64) 
 
 ## v0.4.8
 
