@@ -26,6 +26,7 @@ Package.onUse(function (api) {
     'autocomplete-server.coffee'
   ], 'server');
 
+  api.export('Autocomplete', 'server');
   api.export('AutocompleteTest', {testOnly: true});
 });
 

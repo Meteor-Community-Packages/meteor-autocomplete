@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Make the `Autocomplete.publishCursor(cursor, subscription)` function available on the server, which greatly simplifies the process of returning results for an autocomplete query over a publication.
+
 ## v0.4.9
 
 * Update usage of template helpers for Meteor 0.9.4. (#66, #67)

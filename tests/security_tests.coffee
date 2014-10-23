@@ -12,6 +12,10 @@ if Meteor.isServer
 
   InsecureCollection._insecure = true
 
+  Tinytest.add "autocomplete - server - helper functions exported", (test) ->
+    test.isTrue(Autocomplete)
+    test.isTrue(Autocomplete.publishCursor)
+
 if Meteor.isClient
   AutoCompleteRecords = AutocompleteTest.records
 
