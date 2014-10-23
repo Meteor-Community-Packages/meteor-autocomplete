@@ -1,7 +1,7 @@
 ###
   Test that rule validations work properly.
 ###
-Cause = new Meteor.Collection(null)
+Cause = new Mongo.Collection(null)
 
 Tinytest.add "autocomplete - rules - vanilla client side collection search", (test) ->
   settings =

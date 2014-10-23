@@ -1,4 +1,4 @@
-AutoCompleteRecords = new Meteor.Collection("autocompleteRecords")
+AutoCompleteRecords = new Mongo.Collection("autocompleteRecords")
 
 isServerSearch = (rule) -> _.isString(rule.collection)
 

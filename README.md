@@ -89,7 +89,7 @@ Template.foo.settings = function() {
 ##### Rule Specific Options
 
 - `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
-- `collection`: What collection should be used to match for this rule. Must be a `Meteor.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
+- `collection`: What collection should be used to match for this rule. Must be a `Mongo.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
 - `template`: The template that should be used to render each list item.
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.

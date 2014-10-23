@@ -1,6 +1,9 @@
 ## vNEXT
 
+## v0.4.10
+
 * Make the `Autocomplete.publishCursor(cursor, subscription)` function available on the server, which greatly simplifies the process of returning results for an autocomplete query over a publication.
+* Update the usage of the Mongo Collection API changed in Meteor 0.9.1 and later. 
 
 ## v0.4.9
 

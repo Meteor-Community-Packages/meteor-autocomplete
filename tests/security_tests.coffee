@@ -1,6 +1,6 @@
 if Meteor.isServer
-  @SecureCollection = new Meteor.Collection("secure")
-  @InsecureCollection = new Meteor.Collection("notsecure")
+  @SecureCollection = new Mongo.Collection("secure")
+  @InsecureCollection = new Mongo.Collection("notsecure")
 
   if SecureCollection.find().count() is 0
     SecureCollection.insert

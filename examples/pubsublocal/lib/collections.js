@@ -1,1 +1,1 @@
-BigCollection = new Meteor.Collection('bigcollection');
+BigCollection = new Mongo.Collection('bigcollection');

@@ -1,7 +1,7 @@
 Package.describe({
   name: "mizzao:autocomplete",
   summary: "Client/server autocompletion designed for Meteor's collections and reactivity",
-  version: "0.4.9",
+  version: "0.4.10",
   git: "https://github.com/mizzao/meteor-autocomplete.git"
 });
 
