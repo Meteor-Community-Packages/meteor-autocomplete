@@ -34,6 +34,7 @@ Package.onTest(function(api) {
   api.use("mizzao:autocomplete");
 
   api.use('coffeescript');
+  api.use('mongo');
   api.use('tinytest');
 
   api.addFiles('tests/rule_tests.coffee', 'client');
