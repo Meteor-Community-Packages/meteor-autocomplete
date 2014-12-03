@@ -96,6 +96,7 @@ Template.foo.settings = function() {
 - `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
 - `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
 - `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
+- `inputDelay`: (optional) Delay in milliseconds to do the search after typing. Default: 500
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
 
