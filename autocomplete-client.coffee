@@ -62,6 +62,7 @@ class @AutoComplete
   constructor: (settings) ->
     @limit = settings.limit || 5
     @position = settings.position || "bottom"
+    @inputDelay = settings.inputDelay || 500
 
     @rules = settings.rules
     validateRule(rule) for rule in @rules
@@ -156,7 +157,17 @@ class @AutoComplete
 
       # Did filter change?
       if matches and @filter isnt matches[2]
-        @setFilter(matches[2])
+
+        # clear filter without waiting
+        if matches[2] is ''
+          @setFilter(matches[2])
+        else
+          clearTimeout @delayTimeout if @delayTimeout
+
+          @delayTimeout = setTimeout =>
+            @setFilter(matches[2])
+          , @inputDelay
+
         breakLoop = true
 
       break if breakLoop
