@@ -62,6 +62,7 @@ class @AutoComplete
   constructor: (settings) ->
     @limit = settings.limit || 5
     @position = settings.position || "bottom"
+    @autoSelect = if settings.autoSelect is false then false else true
 
     @rules = settings.rules
     validateRule(rule) for rule in @rules
@@ -213,7 +214,8 @@ class @AutoComplete
 
     [ selector, options ] = getFindParams(rule, filter, @limit)
 
-    Meteor.defer => @ensureSelection()
+    if @autoSelect
+      Meteor.defer => @ensureSelection()
 
     # if server collection, the server has already done the filtering work
     return AutoCompleteRecords.find({}, options) if isServerSearch(rule)
@@ -230,7 +232,8 @@ class @AutoComplete
     if showing
       Meteor.defer =>
         @positionContainer()
-        @ensureSelection()
+        if @autoSelect
+          @ensureSelection()
 
     return showing
 
@@ -333,8 +336,11 @@ class @AutoComplete
 
   # Select next item in list
   next: ->
+    firstItem = @tmplInst.$(".-autocomplete-item:first-child")
+    return unless firstItem.length # Don't try to iterate an empty list
     currentItem = @tmplInst.$(".-autocomplete-item.selected")
-    return unless currentItem.length # Don't try to iterate an empty list
+    return firstItem.addClass('selected') unless currentItem.length # No element was selected: select the first element
+
     currentItem.removeClass("selected")
 
     next = currentItem.next()
@@ -345,8 +351,11 @@ class @AutoComplete
 
   # Select previous item in list
   prev: ->
+    lastItem = @tmplInst.$(".-autocomplete-item:last-child")
+    return unless lastItem.length # Don't try to iterate an empty list
     currentItem = @tmplInst.$(".-autocomplete-item.selected")
-    return unless currentItem.length # Don't try to iterate an empty list
+    return lastItem.addClass('selected') unless currentItem.length # No element was selected: select the last element
+
     currentItem.removeClass("selected")
 
     prev = currentItem.prev()
