@@ -134,6 +134,9 @@ class @AutoComplete
     startpos = @element.selectionStart
     val = @getText().substring(0, startpos)
 
+    #clear the key
+	@removeKey()
+	
     ###
       Matching on multiple expressions.
       We always go from a matched state to an unmatched one
@@ -256,6 +259,9 @@ class @AutoComplete
       # Single-field replacement: replace whole field
       @setText(replacement)
 
+	  # if we have a key field, set it onto the element
+	  @setKey(getField(doc, rule.key)) if rule.key
+	  
       # Field retains focus, but list is hidden unless another key is pressed
       # Must be deferred or onKeyUp will trigger and match again
       # TODO this is a hack; see above
@@ -292,6 +298,12 @@ class @AutoComplete
       @$element.val(text)
     else
       @$element.html(text)
+
+    setKey: (text) ->
+	    @$element.prop('key',text)
+		
+    removeKey: ->
+	    @$element.removeProp('key')
 
   ###
     Rendering functions
