@@ -135,7 +135,7 @@ class @AutoComplete
     val = @getText().substring(0, startpos)
 
     #clear the key
-	@removeKey()
+    @removeKey()
 	
     ###
       Matching on multiple expressions.
@@ -259,8 +259,8 @@ class @AutoComplete
       # Single-field replacement: replace whole field
       @setText(replacement)
 
-	  # if we have a key field, set it onto the element
-	  @setKey(getField(doc, rule.key)) if rule.key
+      # if we have a key field, set it onto the element
+      @setKey(getField(doc, rule.key)) if rule.key
 	  
       # Field retains focus, but list is hidden unless another key is pressed
       # Must be deferred or onKeyUp will trigger and match again
