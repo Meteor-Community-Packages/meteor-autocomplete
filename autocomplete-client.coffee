@@ -299,11 +299,11 @@ class @AutoComplete
     else
       @$element.html(text)
 
-    setKey: (text) ->
-	    @$element.prop('key',text)
+  setKey: (text) ->
+    @$element.prop('key',text)
 		
-    removeKey: ->
-	    @$element.removeProp('key')
+  removeKey: ->
+    @$element.removeProp('key')
 
   ###
     Rendering functions
