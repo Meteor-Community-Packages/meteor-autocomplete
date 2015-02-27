@@ -1,12 +1,12 @@
 Package.describe({
   name: "mizzao:autocomplete",
   summary: "Client/server autocompletion designed for Meteor's collections and reactivity",
-  version: "0.4.10",
+  version: "0.5.0",
   git: "https://github.com/mizzao/meteor-autocomplete.git"
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom("0.9.4");
+  api.versionsFrom("1.0");
 
   api.use(['blaze', 'templating', 'jquery'], 'client');
   api.use(['coffeescript', 'underscore']); // both

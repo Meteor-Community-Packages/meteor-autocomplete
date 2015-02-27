@@ -1,5 +1,7 @@
 ## vNEXT
 
+## v0.5.0
+
 * Switch to jQuery events instead of callbacks; you can now detect autocomplete selections using a template's event map. **Callbacks are no longer supported.** See the demo for a use example.
 
 ## v0.4.10
