@@ -304,25 +304,24 @@ class @AutoComplete
     position = @$element.position()
 
     rule = @matchedRule()
+
+    offset = getCaretCoordinates(@element, @element.selectionStart)
+
     # In whole-field positioning, we don't move the container and make it the
     # full width of the field.
-    # TODO allow this to render top as well, and possibly used in textareas?
     if rule? and isWholeField(rule)
       pos =
         left: position.left
-        top: position.top + @$element.outerHeight() # position.offsetHeight
         width: @$element.outerWidth()               # position.offsetWidth
-
     else # Normal positioning, at token word
-      offset = getCaretCoordinates(@element, @element.selectionStart)
       pos =
         left: position.left + offset.left
 
-      # Position menu from top (above) or from bottom of caret (below, default)
-      if @position is "top"
-        pos.bottom = @$element.offsetParent().height() - position.top - offset.top
-      else
-        pos.top = position.top + offset.top + parseInt(@$element.css('font-size'))
+    # Position menu from top (above) or from bottom of caret (below, default)
+    if @position is "top"
+      pos.bottom = @$element.offsetParent().height() - position.top - offset.top
+    else
+      pos.top = position.top + offset.top + parseInt(@$element.css('font-size'))
 
     @tmplInst.$(".-autocomplete-container").css(pos)
 

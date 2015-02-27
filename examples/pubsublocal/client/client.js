@@ -6,28 +6,30 @@ Fruits = new Mongo.Collection(null);
 });
 
 Template.pubsub.helpers({
-  settings: {
-    position: 'bottom',
-    limit: 30,  // more than 20, to emphasize matches outside strings *starting* with the filter
-    rules: [
-      {
-        token: '@',
-        // string means a server-side collection; otherwise, assume a client-side collection
-        collection: 'BigCollection',
-        field: 'name',
-        options: '', // Use case-sensitive match to take advantage of server index.
-        template: Template.serverCollectionPill,
-        noMatchTemplate: Template.serverNoMatch
-      },
-      {
-        token: '!',
-        collection: Fruits,  // Mongo.Collection object means client-side collection
-        field: 'type',
-        // set to true to search anywhere in the field, which cannot use an index.
-        matchAll: true,  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
-        template: Template.clientCollectionPill
-      }
-    ]
+  settings: function() {
+    return {
+      position: Session.get("position"),
+      limit: 30,  // more than 20, to emphasize matches outside strings *starting* with the filter
+      rules: [
+        {
+          token: '@',
+          // string means a server-side collection; otherwise, assume a client-side collection
+          collection: 'BigCollection',
+          field: 'name',
+          options: '', // Use case-sensitive match to take advantage of server index.
+          template: Template.serverCollectionPill,
+          noMatchTemplate: Template.serverNoMatch
+        },
+        {
+          token: '!',
+          collection: Fruits,  // Mongo.Collection object means client-side collection
+          field: 'type',
+          // set to true to search anywhere in the field, which cannot use an index.
+          matchAll: true,  // 'ba' will match 'bar' and 'baz' first, then 'abacus'
+          template: Template.clientCollectionPill
+        }
+      ]
+    }
   }
 });
 

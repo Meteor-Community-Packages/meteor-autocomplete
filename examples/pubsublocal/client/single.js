@@ -1,18 +1,20 @@
 StandardLegends = new Mongo.Collection(null);
 
 Template.single.helpers({
-  settings: {
-    position: 'top',
-    limit: 10,
-    rules: [
-      {
-        // token: '',
-        collection: StandardLegends,
-        field: 'legend',
-        matchAll: true,
-        template: Template.standardLegends
-      }
-    ]
+  settings: function() {
+    return {
+      position: Session.get("position"),
+      limit: 10,
+      rules: [
+        {
+          // token: '',
+          collection: StandardLegends,
+          field: 'legend',
+          matchAll: true,
+          template: Template.standardLegends
+        }
+      ]
+    };
   },
   legends: function() {
     return StandardLegends.find();

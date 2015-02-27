@@ -11,6 +11,7 @@
         <div class="row">
             <div class="col-md-6">
             {{> pubsub}}
+            {{> options}}
             </div>
             <div class="col-md-6">
             {{> single}}
@@ -57,3 +58,4 @@
 <template name="serverNoMatch">
     <span class="text-danger">Nothing found on the server for <b>{{getFilter}}</b>!</span>
 </template>
+
