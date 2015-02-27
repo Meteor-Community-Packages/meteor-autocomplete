@@ -7,4 +7,4 @@ standard-app-packages
 coffeescript
 insecure
 mizzao:autocomplete
-mizzao:bootstrap-3
+twbs:bootstrap
