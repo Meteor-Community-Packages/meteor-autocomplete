@@ -55,29 +55,31 @@ Add a text `input` or `textarea` to a template in one of the following ways, as 
 Define a helper for the first argument, like the following example:
 
 ```javascript
-Template.foo.settings = function() {
-  return {
-   position: "top",
-   limit: 5,
-   rules: [
-     {
-       token: '@',
-       collection: Meteor.users,
-       field: "username",
-       template: Template.userPill
-     },
-     {
-       token: '!',
-       collection: Dataset,
-       field: "_id",
-       options: '',
-       matchAll: true,
-       filter: { type: "autocomplete" },
-       template: Template.dataPiece
-     }
-   ]
+Template.foo.helpers({
+  settings: function() {
+    return {
+      position: "top",
+      limit: 5,
+      rules: [
+        {
+          token: '@',
+          collection: Meteor.users,
+          field: "username",
+          template: Template.userPill
+        },
+        {
+          token: '!',
+          collection: Dataset,
+          field: "_id",
+          options: '',
+          matchAll: true,
+          filter: { type: "autocomplete" },
+          template: Template.dataPiece
+        }
+      ]
+    };
   }
-};
+});
 ```
 
 ##### Top Level Options
@@ -95,7 +97,6 @@ Template.foo.settings = function() {
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
 - `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
-- `callback`: (optional) A function which is called when an item is selected with arguments `(doc, element)`, corresponding to the document of the selected item and the active input field.
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
 
@@ -106,6 +107,20 @@ Default matcher arguments: the default behavior is to create a regex against the
 Custom matcher: if this is specified, the *default* matcher arguments will be ignored. (Note that you should still specify `field`.)
 
 - `selector`: a one argument `function(match)` that takes the currently matched token suffix and returns the selector that should be added to the argument to `collection.find` to filter the autocomplete results. (**NOTE**: if you are using `$where`, the selector cannot be serialized to the server).
+
+##### Detecting Selections
+
+Autocomplete triggers jQuery events that can be listened to using Meteor's event maps. The only currently supported event is `autocompleteselect`, which notifies of a selected element. For example:
+
+```
+Template.foo.events({
+  "autocompleteselect input": function(event, template, doc) {
+    console.log("selected ", doc);
+  }
+});
+```
+
+See the example app for more details.
 
 ##### Regex Specification and Options
 

@@ -17,8 +17,7 @@ Template.pubsub.helpers({
         field: 'name',
         options: '', // Use case-sensitive match to take advantage of server index.
         template: Template.serverCollectionPill,
-        noMatchTemplate: Template.serverNoMatch,
-        callback: function(doc) { console.log(doc); }
+        noMatchTemplate: Template.serverNoMatch
       },
       {
         token: '!',
@@ -29,5 +28,11 @@ Template.pubsub.helpers({
         template: Template.clientCollectionPill
       }
     ]
+  }
+});
+
+Template.pubsub.events({
+  "autocompleteselect textarea": function(e, t, doc) {
+    console.log("selected ", doc);
   }
 });

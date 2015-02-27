@@ -6,6 +6,10 @@ validateRule = (rule) ->
   if rule.subscription? and not Match.test(rule.collection, String)
     throw new Error("Collection name must be specified as string for server-side search")
 
+  # XXX back-compat message, to be removed
+  if rule.callback?
+    console.warn("autocomplete no longer supports callbacks; use event listeners instead.")
+
 isWholeField = (rule) ->
   # either '' or null both count as whole field.
   return !rule.token
@@ -261,8 +265,7 @@ class @AutoComplete
       # TODO this is a hack; see above
       @onBlur()
 
-    # TODO: behave better if the callback throws an error
-    rule.callback?(doc, @$element) # Notify that the item has been selected
+    @$element.trigger("autocompleteselect", doc)
     return
 
   # Replace the appropriate region
