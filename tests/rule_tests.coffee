@@ -16,6 +16,8 @@ Tinytest.add "autocomplete - rules - vanilla client side collection search", (te
       }
     ]
 
+  test.isFalse(AutocompleteTest.isServerSearch(settings.rules[0]))
+
   new AutoComplete(settings)
   test.ok()
 
@@ -36,7 +38,7 @@ Tinytest.add "autocomplete - rules - check for collection string with subscripti
 
   test.throws -> new AutoComplete(settings)
 
-Tinytest.add "autocomplete - rules - server side collection with subscription", (test) ->
+Tinytest.add "autocomplete - rules - server side collection with default sub", (test) ->
   settings =
     position: 'bottom'
     limit: 10
@@ -45,10 +47,29 @@ Tinytest.add "autocomplete - rules - server side collection with subscription", 
         collection: "Cause",
         field: "name",
         matchAll: true,
+        # template: Template.cause
+      }
+    ]
+
+  test.isTrue(AutocompleteTest.isServerSearch(settings.rules[0]))
+
+  new AutoComplete(settings)
+  test.ok()
+
+Tinytest.add "autocomplete - rules - server side collection with custom sub", (test) ->
+  settings =
+    position: 'bottom'
+    limit: 10
+    rules: [
+      {
+        field: "name",
+        matchAll: true,
         subscription: 'causes',
         # template: Template.cause
       }
     ]
+
+  test.isTrue(AutocompleteTest.isServerSearch(settings.rules[0]))
 
   new AutoComplete(settings)
   test.ok()

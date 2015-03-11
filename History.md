@@ -1,5 +1,7 @@
 ## vNEXT
 
+* Fix an issue where an extraneous `collection` field was required for custom server-side subscriptions. (#40)
+
 ## v0.5.1
 
 * Allow either top or bottom positioning in both normal and whole-field modes. (#75)
