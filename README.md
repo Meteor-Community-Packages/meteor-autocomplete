@@ -145,6 +145,63 @@ Use of a custom publish function also allows you to:
 * use full-text search services outside of Meteor, such as [ElasticSearch](http://www.elasticsearch.org/)
 * use [preferential matching](https://github.com/mizzao/meteor-autocomplete/blob/a437c7b464ad9e779da2ca15566a5b91cf603902/autocomplete-server.coffee) for record fields that start with the autocomplete text, rather than contain it anywhere
 
+It can also help you make a fixed set of results:
+
+```javascript
+if (Meteor.isServer) {
+    Meteor.publish("autocompleteTags", function() {
+        var sub = this;
+
+        var tags = ["TODO", "BUG", "URGENT"];
+
+        // Search by _id
+        var search, options;
+        if (selector._id) {
+            search = selector._id.$regex;
+            options = selector._id.$options;
+        } else {
+            // Match all since no selector given
+            search = "";
+            options = "i";
+        }
+
+        var regex = new RegExp(search, options);
+        var limit = options.limit || 5;
+
+        // Call sub.added on all tags that match the search regex
+        for (var i = 0; i < limit && i < tags.length; i++) {
+            var tag = tags[i];
+            if (regex.test(tag)) {
+                sub.added("autocompleteRecords", tag, { });
+            }
+        }
+
+        this.ready();
+    });
+}
+
+if (Meteor.isClient) {
+    Template.example.helpers({
+        autocompleteSettings: function() {
+            rules: [
+                {
+                    token: "#",
+                    collection: "autocompleteTags", // not needed in next release
+                    subscription: "autocompleteTags",
+                    field: "_id",
+                    template: Template.renderId
+                }
+            ]
+        }
+    });
+}
+
+// renderId.html
+<template name="renderId">
+    <span>{{_id}}</span>
+</template>
+```
+
 ##### Autocomplete Templates
 
 An autocomplete template is just a normal Meteor template that is passed in the matched document. The template will be passed the entire matched document as a data context, so render list items as fancily as you would like. For example, it's usually helpful to see metadata for matches as in the pictures above.
