@@ -138,7 +138,7 @@ Mixing tokens with tokenless autocompletion is unsupported and will probably res
 
 For security purposes, a default implementation of server-side autocomplete is only provided for insecure collections, to be used while prototyping. In all other applications, write your own publish function with the same arguments as in the [autocomplete-recordset](autocomplete-server.coffee) publication and secure it properly, given that malicious clients can subscribe to this function in ways other than the autocomplete client code would.
 
-Make sure to push documents to the `autoCompleteRecords` client-side collection. A convenience function, `Autocomplete.publishCursor`, is provided as an easy way to do this. See the default implementation for an example.
+Make sure to push documents to the `autocompleteRecords` client-side collection. A convenience function, `Autocomplete.publishCursor`, is provided as an easy way to do this. See the default implementation for an example.
 
 Use of a custom publish function also allows you to:
 
