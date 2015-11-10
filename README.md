@@ -97,6 +97,7 @@ Template.foo.helpers({
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
 - `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
+- `loadingTemplate`: (optional) A customized template to be displayed when waiting for server results
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
 
