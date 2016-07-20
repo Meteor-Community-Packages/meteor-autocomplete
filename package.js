@@ -8,7 +8,7 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom("1.0");
 
-  api.use(['blaze', 'templating', 'jquery'], 'client');
+  api.use(['blaze', 'templating', 'jquery', 'check', 'tracker'], 'client');
   api.use(['coffeescript', 'underscore']); // both
   api.use(['mongo', 'ddp']);
 

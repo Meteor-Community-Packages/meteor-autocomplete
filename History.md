@@ -1,5 +1,6 @@
 ## vNEXT
 
+* Add proper package dependencies for newer versions of Meteor.
 * Fix an issue where an extraneous `collection` field was required for custom server-side subscriptions. (#40)
 
 ## v0.5.1
