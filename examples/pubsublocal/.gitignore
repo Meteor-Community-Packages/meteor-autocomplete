@@ -1,5 +1,4 @@
-.meteor/.*
+settings.json
 
-smart.lock
 # the mongodb dump
 dump/*

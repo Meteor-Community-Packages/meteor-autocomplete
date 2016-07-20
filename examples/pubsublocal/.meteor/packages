@@ -8,3 +8,5 @@ coffeescript
 insecure
 mizzao:autocomplete
 twbs:bootstrap
+standard-minifier-css
+standard-minifier-js
