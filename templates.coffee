@@ -8,7 +8,7 @@ acEvents =
 Template.inputAutocomplete.events(acEvents)
 Template.textareaAutocomplete.events(acEvents)
 
-attributes = -> _.omit(@, 'settings') # Render all but the settings parameter
+attributes = -> _.omit(@, ['settings', 'initialKey']) # Render all but the settings and initialKey parameters
 
 autocompleteHelpers = {
   attributes,
@@ -21,6 +21,10 @@ autocompleteHelpers = {
     this.onViewReady ->
       ac.element = this.parentView.firstNode()
       ac.$element = $(ac.element)
+      if (Template.parentData(0).initialKey)
+          doc = ac.rules[0].collection.findOne(Template.parentData(0).initialKey)
+          ac.setText(doc[ac.rules[0].field])
+          ac.setKey(doc[ac.rules[0].key])
 
     return Blaze.With(ac, -> Template._autocompleteContainer)
   )
