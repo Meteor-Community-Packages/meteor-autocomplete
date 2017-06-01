@@ -295,7 +295,7 @@ class @AutoComplete
 
   setText: (text) ->
     if @$element.is("input,textarea")
-      @$element.val(text)
+      @$element.val(text).change()
     else
       @$element.html(text)
 
