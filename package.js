@@ -1,8 +1,8 @@
 Package.describe({
-  name: "mizzao:autocomplete",
+  name: "nidem-autocomplete",
   summary: "Client/server autocompletion designed for Meteor's collections and reactivity",
   version: "0.5.1",
-  git: "https://github.com/mizzao/meteor-autocomplete.git"
+  git: "https://github.com/nidem/meteor-autocomplete.git"
 });
 
 Package.onUse(function (api) {
@@ -21,7 +21,7 @@ Package.onUse(function (api) {
     'autocomplete-client.coffee',
     'templates.coffee'
   ], 'client');
-  
+
   api.addFiles([
     'autocomplete-server.coffee'
   ], 'server');
