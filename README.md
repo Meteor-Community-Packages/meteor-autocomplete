@@ -91,6 +91,7 @@ Template.foo.helpers({
 ##### Rule Specific Options
 
 - `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
+- `beginningOnly`: (optional) If true, the token must be found at the beginning of the line only.
 - `collection`: What collection should be used to match for this rule. Must be a `Mongo.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
 - `template`: The template that should be used to render each list item.
