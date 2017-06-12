@@ -31,11 +31,27 @@ Package.onUse(function (api) {
 });
 
 Package.onTest(function(api) {
-  api.use("mizzao:autocomplete");
+  //api.use("nidem-autocomplete");
 
   api.use('coffeescript');
   api.use('mongo');
   api.use('tinytest');
+
+  api.use(['blaze', 'templating', 'jquery', 'check', 'tracker'], 'client');
+  api.use(['coffeescript', 'underscore']); // both
+
+  api.addFiles([
+    'inputs.html',
+    'autocomplete-client.coffee',
+    'templates.coffee'
+  ], 'client');
+
+  api.addFiles([
+    'autocomplete-server.coffee'
+  ], 'server');
+
+  api.export('Autocomplete', 'server');
+  api.export('AutocompleteTest', {testOnly: true});
 
   api.addFiles('tests/rule_tests.coffee', 'client');
   api.addFiles('tests/regex_tests.coffee', 'client');
