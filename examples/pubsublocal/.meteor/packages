@@ -5,8 +5,11 @@
 
 standard-app-packages
 coffeescript
-insecure
+insecure@1.0.7
 mizzao:autocomplete
 twbs:bootstrap
-standard-minifier-css
-standard-minifier-js
+standard-minifier-css@1.6.1
+standard-minifier-js@2.6.0
+shell-server
+dynamic-import
+ecmascript
