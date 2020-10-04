@@ -9,7 +9,7 @@ Package.onUse(function (api) {
   api.versionsFrom("1.0");
 
   api.use(['blaze', 'templating', 'jquery', 'check', 'tracker'], 'client');
-  api.use(['coffeescript', 'underscore']); // both
+  api.use(['coffeescript@1.0.0 || 2.0.0', 'underscore']); // both
   api.use(['mongo', 'ddp']);
 
   api.use("dandv:caret-position@2.1.1", 'client');
