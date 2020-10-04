@@ -2,9 +2,10 @@
 
 To run:
 
+```shell script
+npm run start
 ```
-mrt install .
+or 
+```shell script
 meteor
 ```
-
-Works only with Meteor >= 0.7.2 due to https://github.com/meteor/meteor/pull/1874
