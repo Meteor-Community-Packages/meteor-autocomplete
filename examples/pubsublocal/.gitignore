@@ -1,4 +1,7 @@
+.meteor/local
+.meteor/meteorite
 settings.json
+node_modules/
 
 # the mongodb dump
 dump/*
