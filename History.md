@@ -2,6 +2,8 @@
 
 * Add proper package dependencies for newer versions of Meteor.
 * Fix an issue where an extraneous `collection` field was required for custom server-side subscriptions. (#40)
+* Make compatible with CoffeeScript 2 (#148)
+* `autocomplete` html attribute is now set to `off` in order to prevent browser displaying its own autocomplete dropdown (#99).
 
 ## v0.5.1
 
