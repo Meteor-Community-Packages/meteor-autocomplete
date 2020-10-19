@@ -5,6 +5,7 @@
 * Make compatible with CoffeeScript 2 (#148)
 * `autocomplete` html attribute is now set to `off` in order to prevent browser displaying its own autocomplete dropdown (#99).
 * Updated example to the latest Meteor version
+* Support all utf-8 symbols in regex (#151)
 
 ## v0.5.1
 

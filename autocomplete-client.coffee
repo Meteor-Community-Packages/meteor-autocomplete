@@ -20,7 +20,7 @@ isWholeField = (rule) ->
 getRegExp = (rule) ->
   unless isWholeField(rule)
     # Expressions for the range from the last word break to the current cursor position
-    new RegExp('(^|\\b|\\s)' + rule.token + '([\\w.]*)$')
+    new RegExp('(^|\\b|\\s)' + rule.token + '([\\\\w.a-zA-Z0-9\u0080-\u9fff]*)$')
   else
     # Whole-field behavior - word characters or spaces
     new RegExp('(^)(.*)$')
