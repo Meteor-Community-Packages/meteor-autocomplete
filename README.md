@@ -96,7 +96,7 @@ Template.foo.helpers({
 - `template`: The template that should be used to render each list item.
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
-- `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
+- `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.js) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
 
@@ -136,7 +136,7 @@ Mixing tokens with tokenless autocompletion is unsupported and will probably res
 
 ##### Server-side Autocompletion and Text Search Engines
 
-For security purposes, a default implementation of server-side autocomplete is only provided for insecure collections, to be used while prototyping. In all other applications, write your own publish function with the same arguments as in the [autocomplete-recordset](autocomplete-server.coffee) publication and secure it properly, given that malicious clients can subscribe to this function in ways other than the autocomplete client code would.
+For security purposes, a default implementation of server-side autocomplete is only provided for insecure collections, to be used while prototyping. In all other applications, write your own publish function with the same arguments as in the [autocomplete-recordset](autocomplete-server.js) publication and secure it properly, given that malicious clients can subscribe to this function in ways other than the autocomplete client code would.
 
 Make sure to push documents to the `autocompleteRecords` client-side collection. A convenience function, `Autocomplete.publishCursor`, is provided as an easy way to do this. See the default implementation for an example.
 
