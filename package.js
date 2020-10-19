@@ -6,10 +6,10 @@ Package.describe({
 });
 
 Package.onUse(function (api) {
-  api.versionsFrom("1.0");
+  api.versionsFrom("1.9");
 
   api.use(['blaze', 'templating', 'jquery', 'check', 'tracker'], 'client');
-  api.use(['underscore', 'mongo', 'ddp']); // both
+  api.use(['underscore', 'mongo', 'ddp', 'ecmascript']); // both
 
   api.use("dandv:caret-position@2.1.1", 'client');
 
@@ -32,8 +32,7 @@ Package.onUse(function (api) {
 Package.onTest(function(api) {
   api.use("mizzao:autocomplete");
 
-  api.use('mongo');
-  api.use('tinytest');
+  api.use(['mongo', 'ecmascript', 'tinytest']);
 
   api.addFiles('tests/rule_tests.js', 'client');
   api.addFiles('tests/regex_tests.js', 'client');
