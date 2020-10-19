@@ -33,7 +33,7 @@ Package.onUse(function (api) {
 Package.onTest(function(api) {
   api.use("mizzao:autocomplete");
 
-  api.use('coffeescript');
+  api.use('coffeescript@2.4.1');
   api.use('mongo');
   api.use('tinytest');
 
