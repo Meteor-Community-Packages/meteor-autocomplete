@@ -320,16 +320,15 @@ export const AutoComplete = (function() {
   };
 
   AutoComplete.prototype.replace = function(replacement) {
-    var finalFight, fullStuff, newPosition, posfix, separator, startpos, val;
-    startpos = this.element.selectionStart;
-    fullStuff = this.getText();
-    val = fullStuff.substring(0, startpos);
+    const startpos = this.element.selectionStart;
+    const fullStuff = this.getText();
+    let val = fullStuff.substring(0, startpos);
     val = val.replace(this.expressions[this.matched], "$1" + this.rules[this.matched].token + replacement);
-    posfix = fullStuff.substring(startpos, fullStuff.length);
-    separator = (posfix.match(/^\s/) ? "" : " ");
-    finalFight = val + separator + posfix;
+    const posfix = fullStuff.substring(startpos, fullStuff.length);
+    const separator = (posfix.match(/^\s/) ? "" : " ");
+    const finalFight = val + separator + posfix;
     this.setText(finalFight);
-    newPosition = val.length + 1;
+    const newPosition = val.length + 1;
     this.element.setSelectionRange(newPosition, newPosition);
   };
 
