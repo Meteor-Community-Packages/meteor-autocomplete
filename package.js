@@ -9,8 +9,7 @@ Package.onUse(function (api) {
   api.versionsFrom("1.0");
 
   api.use(['blaze', 'templating', 'jquery', 'check', 'tracker'], 'client');
-  api.use(['coffeescript', 'underscore']); // both
-  api.use(['mongo', 'ddp']);
+  api.use(['underscore', 'mongo', 'ddp']); // both
 
   api.use("dandv:caret-position@2.1.1", 'client');
 
@@ -18,12 +17,12 @@ Package.onUse(function (api) {
   api.addFiles([
     'autocomplete.css',
     'inputs.html',
-    'autocomplete-client.coffee',
-    'templates.coffee'
+    'autocomplete-client.js',
+    'templates.js'
   ], 'client');
   
   api.addFiles([
-    'autocomplete-server.coffee'
+    'autocomplete-server.js'
   ], 'server');
 
   api.export('Autocomplete', 'server');

@@ -1,3 +1,5 @@
+import { AutocompleteTest } from "meteor/mizzao:autocomplete";
+
 Tinytest.add("autocomplete - params - default case insensitive", function(test) {
   const rule = {
     field: "foo"

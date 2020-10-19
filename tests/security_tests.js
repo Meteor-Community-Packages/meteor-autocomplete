@@ -1,3 +1,7 @@
+import { AutocompleteTest } from "meteor/mizzao:autocomplete";
+import { Meteor } from "meteor/meteor";
+import { Mongo } from "meteor/mongo";
+
 let AutoCompleteRecords;
 
 if (Meteor.isServer) {

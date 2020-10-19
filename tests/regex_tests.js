@@ -1,3 +1,5 @@
+import { AutocompleteTest } from "meteor/mizzao:autocomplete";
+
 /*
   Test that regular expressions match what we think they match.
  */

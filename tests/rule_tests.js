@@ -1,4 +1,6 @@
-import { Mongo } from 'meteor/mongo'
+import { Mongo } from "meteor/mongo";
+import { AutocompleteTest, AutoComplete } from "meteor/mizzao:autocomplete";
+
 /*
   Test that rule validations work properly.
 */
