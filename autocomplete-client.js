@@ -71,7 +71,7 @@ const getField = function(obj, str) {
   return obj;
 };
 
-export const AutoComplete = (function() {
+export const AutoComplete = function() {
   AutoComplete.KEYS = [40, 38, 13, 27, 9];
 
   function AutoComplete(settings) {
@@ -343,7 +343,7 @@ export const AutoComplete = (function() {
 
   AutoComplete.prototype.setText = function(text) {
     if (this.$element.is("input,textarea")) {
-      return this.$element.val(text);
+      return this.$element.val(text).change();
     } else {
       return this.$element.html(text);
     }
@@ -417,8 +417,7 @@ export const AutoComplete = (function() {
   };
 
   return AutoComplete;
-
-})();
+};
 
 export const AutocompleteTest = {
   records: AutoCompleteRecords,

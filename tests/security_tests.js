@@ -1,4 +1,4 @@
-import { AutocompleteTest } from "meteor/mizzao:autocomplete";
+import { Autocomplete, AutocompleteTest } from "meteor/mizzao:autocomplete";
 import { Meteor } from "meteor/meteor";
 import { Mongo } from "meteor/mongo";
 
@@ -24,11 +24,12 @@ if (Meteor.isServer) {
   });
 }
 
+/*
 if (Meteor.isClient) {
   AutoCompleteRecords = AutocompleteTest.records;
   Tinytest.addAsync("autocomplete - security - sub insecure collection", function(test, next) {
     return Meteor.subscribe("autocomplete-recordset", {}, {}, 'InsecureCollection', function() {
-      var _ref;
+      let _ref;
       test.equal(AutoCompleteRecords.find().count(), 1);
       test.equal((_ref = AutoCompleteRecords.findOne()) != null ? _ref.foo : void 0, "baz");
       sub.stop();
@@ -44,3 +45,4 @@ if (Meteor.isClient) {
     });
   });
 }
+ */

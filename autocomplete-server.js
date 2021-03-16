@@ -1,7 +1,7 @@
 import { Mongo } from "meteor/mongo";
 import { Meteor } from "meteor/meteor";
 
-export const Autocomplete = (function() {
+export const Autocomplete = function() {
   function Autocomplete() {}
 
   Autocomplete.publishCursor = function(cursor, sub) {
@@ -10,10 +10,11 @@ export const Autocomplete = (function() {
 
   return Autocomplete;
 
-})();
+};
 
+/*
 Meteor.publish('autocomplete-recordset', function(selector, options, collName) {
-  const collection = global[collName];
+  const collection = new Mongo.Collection(collName);
   if (!collection) {
     throw new Error(collName + ' is not defined on the global namespace of the server.');
   }
@@ -27,3 +28,4 @@ Meteor.publish('autocomplete-recordset', function(selector, options, collName) {
   Autocomplete.publishCursor(collection.find(selector, options), this);
   return this.ready();
 });
+ */
