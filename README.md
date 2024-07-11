@@ -87,6 +87,7 @@ Template.foo.helpers({
 - `position` (= `top` or `bottom`) specifies if the autocomplete menu should render above or below the cursor. Select based on the placement of your `input`/`textarea` relative to other elements on the page.
 - `limit`: Controls how big the autocomplete menu should get.
 - `rules`: An array of matching rules for the autocomplete widget, which will be checked in order.
+- `autoSelect`: (default `true`) Whether to automatically select the first matching result.
 
 ##### Rule Specific Options
 
