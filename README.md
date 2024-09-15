@@ -93,10 +93,12 @@ Template.foo.helpers({
 - `token`: (optional) What character should trigger this rule. Leave blank for whole-field behavior (see below).
 - `collection`: What collection should be used to match for this rule. Must be a `Mongo.Collection` for client-side collections, or a string for remote collections (available in `global` on the server.)
 - `subscription`: A custom subscription for server-side search; see below.
+- `subscriptionParams` - additional information required by the publication function, i.e. providing additional data for accessing external APIs (like token, etc)
 - `template`: The template that should be used to render each list item.
 - `filter`: (optional) An object that will be merged with the autocomplete selector to limit the results to more specific documents in the collection.
 - `sort`: (default `false`) Whether to sort the results before applying the limit. For good performance on large collections, this should be turned on only for server-side searches where an index can be used.
 - `noMatchTemplate`: (optional) A template to display when nothing matches. This template can use the [reactive functions on the AutoComplete object](autocomplete-client.coffee) to display a specific message, or be [assigned mouse/keyboard events](http://docs.meteor.com/#eventmaps) for user interaction.
+- `loadingTemplate`: (optional) A customized template to be displayed when waiting for server results
 
 Default matcher arguments: the default behavior is to create a regex against the field to be matched, which will be constructed using the arguments below.
 

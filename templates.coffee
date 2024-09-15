@@ -48,3 +48,4 @@ Template._autocompleteContainer.events
 Template._autocompleteContainer.helpers
   empty: -> @filteredList().count() is 0
   noMatchTemplate: -> @matchedRule().noMatchTemplate || Template._noMatch
+  loadingTemplate: -> @matchedRule().loadingTemplate || Template._loading

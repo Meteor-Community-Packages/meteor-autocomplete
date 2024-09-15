@@ -28,7 +28,7 @@
                 {{> noMatchTemplate }}
             {{/unless}}
         {{else}}
-            <i>loading...</i>
+            {{> loadingTemplate }}
         {{/if}}
     </div>
     {{/if}}
@@ -36,4 +36,8 @@
 
 <template name="_noMatch">
     (<i>no matches</i>)
+</template>
+
+<template name="_loading">
+    <i>loading...</i>
 </template>
