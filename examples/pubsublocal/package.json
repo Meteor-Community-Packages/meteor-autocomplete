@@ -4,7 +4,7 @@
   "dependencies": {
     "@babel/runtime": "^7.12.1",
     "jquery": "^3.5.1",
-    "meteor-node-stubs": "^1.0.1"
+    "meteor-node-stubs": "^1.2.26"
   },
   "scripts": {
     "start": "meteor run"
